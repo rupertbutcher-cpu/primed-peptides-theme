@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- Pen body - main cylinder -->
+  <rect x="125" y="55" width="50" height="170" rx="25" fill="white" stroke="#c8e0f0" stroke-width="2"/>
+
+  <!-- Top cap -->
+  <rect x="130" y="45" width="40" height="28" rx="10" fill="#6bb5e3"/>
+  <rect x="138" y="40" width="24" height="12" rx="6" fill="#4a9fd4"/>
+  <circle cx="150" cy="42" r="6" fill="#3a8fc4" stroke="#6bb5e3" stroke-width="2"/>
+
+  <!-- Dose window -->
+  <rect x="133" y="90" width="34" height="44" rx="6" fill="#e8f4fb" stroke="#c8e0f0" stroke-width="1"/>
+  <text x="150" y="117" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="800" fill="#4a9fd4">0.2</text>
+  <text x="150" y="127" text-anchor="middle" font-family="Inter, sans-serif" font-size="6" fill="#94b8cc">mg</text>
+
+  <!-- Dial grip rings -->
+  <rect x="126" y="144" width="48" height="6" rx="3" fill="#e0eef7"/>
+  <rect x="126" y="152" width="48" height="6" rx="3" fill="#e0eef7"/>
+  <rect x="126" y="160" width="48" height="6" rx="3" fill="#e0eef7"/>
+
+  <!-- Label band -->
+  <rect x="128" y="170" width="44" height="36" rx="4" fill="#f8fbfd" stroke="#d6eaf7" stroke-width="1"/>
+  <text x="150" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#6bb5e3" letter-spacing="0.5">primed</text>
+  <text x="150" y="196" text-anchor="middle" font-family="Inter, sans-serif" font-size="5" font-weight="600" fill="#94b8cc" letter-spacing="1.5">PEPTIDES</text>
+
+  <!-- Needle tip -->
+  <rect x="142" y="222" width="16" height="12" rx="3" fill="#c8e0f0"/>
+  <rect x="145" y="232" width="10" height="8" rx="2" fill="#a0c8e0"/>
+  <rect x="147" y="238" width="6" height="14" rx="3" fill="#8ab8d0"/>
+  <path d="M150 252 L148 264 L150 266 L152 264 Z" fill="#6bb5e3"/>
+
+  <!-- Shine -->
+  <rect x="129" y="58" width="7" height="160" rx="3" fill="white" opacity="0.5"/>
+</svg>

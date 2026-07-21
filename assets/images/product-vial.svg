@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- Vial body -->
+  <rect x="112" y="80" width="76" height="140" rx="16" fill="white" stroke="#c8e0f0" stroke-width="2"/>
+
+  <!-- Rubber stopper -->
+  <rect x="112" y="75" width="76" height="24" rx="8" fill="#4a9fd4"/>
+  <rect x="118" y="72" width="64" height="16" rx="6" fill="#6bb5e3"/>
+
+  <!-- Metal crimp cap -->
+  <rect x="128" y="63" width="44" height="14" rx="4" fill="#8ecae6"/>
+  <circle cx="150" cy="69" r="8" fill="#6bb5e3" stroke="white" stroke-width="2"/>
+  <circle cx="150" cy="69" r="4" fill="white"/>
+
+  <!-- Liquid fill -->
+  <rect x="114" y="120" width="72" height="80" rx="8" fill="#e8f4fb"/>
+
+  <!-- Label -->
+  <rect x="120" y="105" width="60" height="88" rx="6" fill="white" stroke="#d6eaf7" stroke-width="1"/>
+
+  <!-- Label content -->
+  <rect x="126" y="112" width="48" height="5" rx="2" fill="#6bb5e3"/>
+  <rect x="126" y="122" width="44" height="3" rx="1.5" fill="#c8e0f0"/>
+  <rect x="126" y="129" width="38" height="3" rx="1.5" fill="#c8e0f0"/>
+  <rect x="126" y="136" width="44" height="3" rx="1.5" fill="#c8e0f0"/>
+
+  <text x="150" y="162" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="#6bb5e3" letter-spacing="0.5">primed</text>
+  <text x="150" y="173" text-anchor="middle" font-family="Inter, sans-serif" font-size="6" font-weight="600" fill="#94b8cc" letter-spacing="2">PEPTIDES</text>
+  <rect x="126" y="178" width="48" height="3" rx="1.5" fill="#e8f4fb"/>
+  <rect x="130" y="184" width="40" height="2" rx="1" fill="#e8f4fb"/>
+
+  <!-- Measurement lines -->
+  <line x1="113" y1="125" x2="109" y2="125" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="113" y1="145" x2="109" y2="145" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="113" y1="165" x2="109" y2="165" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="113" y1="185" x2="109" y2="185" stroke="#c8e0f0" stroke-width="1"/>
+
+  <!-- Shine -->
+  <rect x="116" y="85" width="7" height="128" rx="3" fill="white" opacity="0.45"/>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- Background -->
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- Cartridge body -->
+  <rect x="115" y="60" width="70" height="160" rx="12" fill="white" stroke="#c8e0f0" stroke-width="2"/>
+
+  <!-- Cartridge top cap -->
+  <rect x="125" y="50" width="50" height="20" rx="6" fill="#6bb5e3"/>
+
+  <!-- Cartridge bottom tip -->
+  <rect x="130" y="218" width="40" height="16" rx="4" fill="#4a9fd4"/>
+  <rect x="137" y="232" width="26" height="10" rx="3" fill="#3a8fc4"/>
+  <rect x="142" y="240" width="16" height="8" rx="2" fill="#2d7ab5"/>
+
+  <!-- Liquid fill -->
+  <rect x="117" y="100" width="66" height="100" rx="6" fill="#e8f4fb"/>
+
+  <!-- Label area -->
+  <rect x="122" y="108" width="56" height="84" rx="6" fill="white" stroke="#d6eaf7" stroke-width="1"/>
+
+  <!-- Label text lines -->
+  <rect x="128" y="116" width="44" height="5" rx="2" fill="#6bb5e3"/>
+  <rect x="128" y="126" width="40" height="3" rx="1.5" fill="#c8e0f0"/>
+  <rect x="128" y="133" width="36" height="3" rx="1.5" fill="#c8e0f0"/>
+  <rect x="128" y="140" width="44" height="3" rx="1.5" fill="#c8e0f0"/>
+
+  <!-- Primed logo text on label -->
+  <text x="150" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="#6bb5e3" letter-spacing="0.5">primed</text>
+  <text x="150" y="183" text-anchor="middle" font-family="Inter, sans-serif" font-size="6" font-weight="600" fill="#94b8cc" letter-spacing="2">PEPTIDES</text>
+
+  <!-- Measurement lines on side -->
+  <line x1="116" y1="110" x2="112" y2="110" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="116" y1="130" x2="112" y2="130" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="116" y1="150" x2="112" y2="150" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="116" y1="170" x2="112" y2="170" stroke="#c8e0f0" stroke-width="1"/>
+  <line x1="116" y1="190" x2="112" y2="190" stroke="#c8e0f0" stroke-width="1"/>
+
+  <!-- Shine effect -->
+  <rect x="120" y="65" width="8" height="140" rx="4" fill="white" opacity="0.5"/>
+</svg>

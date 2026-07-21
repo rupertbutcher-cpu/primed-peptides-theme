@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- Case shadow -->
+  <rect x="62" y="185" width="176" height="12" rx="6" fill="#c8d8e4" opacity="0.5"/>
+
+  <!-- Case body bottom -->
+  <rect x="60" y="140" width="180" height="52" rx="10" fill="#2d3748"/>
+
+  <!-- Case body top (lid open) -->
+  <rect x="60" y="88" width="180" height="56" rx="10" fill="#374151" transform="rotate(-8 60 144)"/>
+
+  <!-- Hinge -->
+  <rect x="138" y="136" width="24" height="8" rx="4" fill="#4b5563"/>
+
+  <!-- Foam interior bottom -->
+  <rect x="68" y="148" width="164" height="36" rx="6" fill="#1e3a5f"/>
+
+  <!-- Pen slot -->
+  <rect x="88" y="154" width="24" height="24" rx="12" fill="#152d4a" stroke="#6bb5e3" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- Cartridge slots -->
+  <rect x="122" y="156" width="14" height="20" rx="4" fill="#152d4a" stroke="#6bb5e3" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="142" y="156" width="14" height="20" rx="4" fill="#152d4a" stroke="#6bb5e3" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="162" y="156" width="14" height="20" rx="4" fill="#152d4a" stroke="#6bb5e3" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="182" y="156" width="14" height="20" rx="4" fill="#152d4a" stroke="#6bb5e3" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Foam interior lid -->
+  <rect x="65" y="92" width="164" height="44" rx="6" fill="#1e3a5f" transform="rotate(-8 60 144)"/>
+
+  <!-- Logo on lid -->
+  <text x="148" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="800" fill="#6bb5e3" letter-spacing="0.5" transform="rotate(-8 148 118)">primed</text>
+  <text x="148" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#4a7a9a" letter-spacing="3" transform="rotate(-8 148 130)">PEPTIDES</text>
+
+  <!-- Clasp -->
+  <rect x="143" y="183" width="14" height="8" rx="3" fill="#6bb5e3"/>
+  <rect x="146" y="185" width="8" height="4" rx="2" fill="#4a9fd4"/>
+
+  <!-- Edge highlight -->
+  <rect x="60" y="140" width="180" height="4" rx="2" fill="#4b5563"/>
+</svg>
