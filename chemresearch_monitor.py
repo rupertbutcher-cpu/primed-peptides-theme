@@ -1,0 +1,141 @@
+"""
+Unattended ChemResearch stock monitor for Primed Peptides.
+
+Launches a fresh, real (visible, non-headless - same anti-bot-detection
+pattern as chemresearch_login.py) Chrome using the already-authenticated
+session in .chrome-chemresearch-profile, pulls the live catalogue, and
+WhatsApps Rupert only when one of the 8 confidently-mapped LIVE WooCommerce
+products flips in-stock <-> out-of-stock at source.
+
+Deliberately does NOT touch WooCommerce at all. Rupert's call (2026-08-11):
+keep selling through a ChemResearch stockout and treat it like a backorder,
+same as Haul & Store does - don't hide the product from the site. This
+script is monitoring/alerting only.
+
+Needs Chrome NOT already open on .chrome-chemresearch-profile - Chrome locks
+the profile dir to one process at a time, so if chemresearch_login.py's
+manual-login window is still open, this run will fail cleanly (see the
+"already locked" message) rather than doing anything unexpected.
+
+Meant to run on a schedule via Windows Task Scheduler - see
+install-chemresearch-monitor-task.ps1 for the registration snippet
+(admin PowerShell, run once on the server).
+"""
+import json
+import os
+import subprocess
+import sys
+import time
+import urllib.request
+
+from playwright.sync_api import sync_playwright
+
+from chemresearch_pull_stock import parse_products
+from chemresearch_wc_reconcile import WC_TO_CR
+
+CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+DEBUG_PORT = 9227
+URL = "https://orders.chemresearch.co.uk/portal/products?format=cartridge"
+HERE = os.path.dirname(os.path.abspath(__file__))
+PROFILE_DIR = os.path.join(HERE, ".chrome-chemresearch-profile")
+STOCK_FILE = os.path.join(HERE, "chemresearch_stock.json")
+
+BOT_SEND_URL = "http://localhost:3001/api/internal/send"
+BOT_SECRET = "hs-int-2026"
+ALERT_TO = "447545451386"  # Rupert - same number health-monitor.js alerts
+
+# wc_id -> short label for the alert message (the 8 confidently-mapped live products)
+WC_LABELS = {
+    47: "BPC157 + TB500 10mg+10mg (£100)",
+    30: "GHK-CU 100mg (£70)",
+    29: "MOT-C 10mg (£30)",
+    28: "Ipamorelin + CJC1295 5mg+5mg (£70)",
+    27: "Tesamorelin 20mg (£80)",
+    26: "DISP 5mg (£30)",
+    24: "NAD+ 1000mg (£150)",
+    23: "Semax 20mg (£70)",
+}
+
+MIN_EXPECTED_PRODUCTS = 30  # sanity floor - a real pull has been 44-48; far fewer usually means logged out
+
+
+def send_whatsapp(text):
+    body = json.dumps({"secret": BOT_SECRET, "waId": ALERT_TO + "@c.us", "text": text}).encode()
+    req = urllib.request.Request(BOT_SEND_URL, data=body, headers={"Content-Type": "application/json"}, method="POST")
+    urllib.request.urlopen(req, timeout=15)
+
+
+def load_previous():
+    try:
+        with open(STOCK_FILE, encoding="utf-8") as f:
+            return {p["name"]: p for p in json.load(f)}
+    except FileNotFoundError:
+        return {}
+
+
+def main():
+    previous = load_previous()
+
+    proc = subprocess.Popen([
+        CHROME_PATH,
+        f"--remote-debugging-port={DEBUG_PORT}",
+        f"--user-data-dir={PROFILE_DIR}",
+        "--no-first-run",
+        "--no-default-browser-check",
+        URL,
+    ])
+    time.sleep(5)
+
+    text = None
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
+            page = browser.contexts[0].pages[0]
+            if "products" not in page.url:
+                page.goto(URL)
+                page.wait_for_timeout(1500)
+            text = page.evaluate("() => document.body.innerText")
+    except Exception as e:
+        print(f"Pull failed: {e}")
+    finally:
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    if text is None:
+        send_whatsapp("ChemResearch stock check failed to load the portal (profile may be locked by an open Chrome window, or the session needs a fresh login).")
+        sys.exit(1)
+
+    products = parse_products(text)
+
+    if len(products) < MIN_EXPECTED_PRODUCTS:
+        send_whatsapp(f"ChemResearch stock check only found {len(products)} products (expected ~44+) - likely logged out. Run chemresearch_login.py and log in again.")
+        sys.exit(1)
+
+    current = {p["name"]: p for p in products}
+
+    changes = []
+    for wc_id, cr_name in WC_TO_CR.items():
+        if not cr_name or wc_id not in WC_LABELS:
+            continue
+        prev = previous.get(cr_name)
+        now = current.get(cr_name)
+        if not now:
+            continue
+        if prev and prev["inStock"] != now["inStock"]:
+            direction = "back IN STOCK" if now["inStock"] else "now OUT OF STOCK"
+            changes.append(f"- {WC_LABELS[wc_id]}: {direction} at ChemResearch (qty {now['qty']})")
+
+    with open(STOCK_FILE, "w", encoding="utf-8") as f:
+        json.dump(products, f, indent=2, ensure_ascii=False)
+
+    if changes:
+        msg = ("ChemResearch stock change (Primed Peptides):\n" + "\n".join(changes) +
+               "\n\nStill selling as normal on the site - treat like a backorder, nothing changed on WooCommerce.")
+        send_whatsapp(msg)
+        print("Alert sent:\n" + msg)
+    else:
+        print(f"No change vs last check. {len(products)} products pulled.")
+
+
+if __name__ == "__main__":
+    main()

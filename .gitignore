@@ -6,3 +6,4 @@ current-product-images/
 chemresearch_products_raw.txt
 chemresearch_stock.json
 chemresearch_wc_reconcile.json
+__pycache__/
