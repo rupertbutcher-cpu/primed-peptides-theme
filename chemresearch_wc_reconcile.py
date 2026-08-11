@@ -31,7 +31,8 @@ import sys
 # plausibly matches (kept explicit so "no match" is a visible fact, not a
 # silent gap).
 WC_TO_CR = {
-    47: "TB-500 + BPC-157 10mg/10mg Cartridge",      # BPC157 + TB500 Cartridge 10mg+10mg
+    47: "WOLVERINE TB-500 + BPC-157 10mg/10mg Cartridge",  # BPC157 + TB500 Cartridge 10mg+10mg - ChemResearch
+                                                            # renamed this to add "WOLVERINE" on/before 2026-08-11
     30: "GHK-CU 100mg Cartridge",                     # GHK-CU Cartridge 100mg
     29: "MOTS-C 30mg Cartridge",                      # MOT-C Cartridge 10mg
     28: "IPAMORELIN + CJC 1295 NO DAC 5mg/5mg Cartridge",  # Ipamorelin + CJC1295 Cartridge 5mg+5mg
