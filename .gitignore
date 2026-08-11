@@ -2,3 +2,6 @@
 node_modules/
 *.log
 current-product-images/
+.chrome-chemresearch-profile/
+chemresearch_products_raw.txt
+chemresearch_stock.json
