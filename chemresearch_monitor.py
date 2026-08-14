@@ -21,6 +21,7 @@ Meant to run on a schedule via Windows Task Scheduler - see
 install-chemresearch-monitor-task.ps1 for the registration snippet
 (admin PowerShell, run once on the server).
 """
+import datetime
 import json
 import os
 import subprocess
@@ -39,6 +40,17 @@ URL = "https://orders.chemresearch.co.uk/portal/products?format=cartridge"
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROFILE_DIR = os.path.join(HERE, ".chrome-chemresearch-profile")
 STOCK_FILE = os.path.join(HERE, "chemresearch_stock.json")
+LOG_FILE = os.path.join(HERE, "chemresearch_monitor.log")
+
+
+# Task Scheduler discards stdout/stderr entirely, so a failing run left zero trace anywhere —
+# found 2026-08-14 debugging exactly this. Minimal persistent logging so a future failure is
+# diagnosable without re-running by hand.
+def log(msg):
+    line = f"{datetime.datetime.now().isoformat(timespec='seconds')} {msg}"
+    print(line)
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(line + "\n")
 
 BOT_SEND_URL = "http://localhost:3001/api/internal/send"
 BOT_SECRET = "hs-int-2026"
@@ -74,6 +86,7 @@ def load_previous():
 
 
 def main():
+    log("=== run start ===")
     previous = load_previous()
 
     proc = subprocess.Popen([
@@ -96,18 +109,21 @@ def main():
                 page.wait_for_timeout(1500)
             text = page.evaluate("() => document.body.innerText")
     except Exception as e:
-        print(f"Pull failed: {e}")
+        log(f"Pull failed: {e}")
     finally:
         subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if text is None:
+        log("text is None after pull attempt — sending failure alert")
         send_whatsapp("ChemResearch stock check failed to load the portal (profile may be locked by an open Chrome window, or the session needs a fresh login).")
         sys.exit(1)
 
     products = parse_products(text)
+    log(f"parse_products found {len(products)} products")
 
     if len(products) < MIN_EXPECTED_PRODUCTS:
+        log(f"Below MIN_EXPECTED_PRODUCTS ({MIN_EXPECTED_PRODUCTS}) — sending failure alert. First 500 chars of page text: {text[:500]!r}")
         send_whatsapp(f"ChemResearch stock check only found {len(products)} products (expected ~44+) - likely logged out. Run chemresearch_login.py and log in again.")
         sys.exit(1)
 
@@ -132,9 +148,9 @@ def main():
         msg = ("ChemResearch stock change (Primed Peptides):\n" + "\n".join(changes) +
                "\n\nStill selling as normal on the site - treat like a backorder, nothing changed on WooCommerce.")
         send_whatsapp(msg)
-        print("Alert sent:\n" + msg)
+        log("Alert sent:\n" + msg)
     else:
-        print(f"No change vs last check. {len(products)} products pulled.")
+        log(f"No change vs last check. {len(products)} products pulled.")
 
 
 if __name__ == "__main__":
