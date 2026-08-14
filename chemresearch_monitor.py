@@ -41,6 +41,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PROFILE_DIR = os.path.join(HERE, ".chrome-chemresearch-profile")
 STOCK_FILE = os.path.join(HERE, "chemresearch_stock.json")
 LOG_FILE = os.path.join(HERE, "chemresearch_monitor.log")
+HISTORY_FILE = os.path.join(HERE, "chemresearch_stock_history.jsonl")
+HISTORY_STATE_FILE = os.path.join(HERE, "chemresearch_stock_history_state.json")
 
 
 # Task Scheduler discards stdout/stderr entirely, so a failing run left zero trace anywhere —
@@ -83,6 +85,32 @@ def load_previous():
             return {p["name"]: p for p in json.load(f)}
     except FileNotFoundError:
         return {}
+
+
+def append_history(products, date_str):
+    """Appends one row per product for today to the persistent JSONL log, so the
+    in/out-of-stock pattern over time can be reported on later. Guarded against
+    double-appending if the monitor gets run more than once on the same day."""
+    try:
+        with open(HISTORY_STATE_FILE, encoding="utf-8") as f:
+            last_date = json.load(f).get("lastDate")
+    except FileNotFoundError:
+        last_date = None
+
+    if last_date == date_str:
+        log(f"History already logged for {date_str}, skipping duplicate append.")
+        return
+
+    with open(HISTORY_FILE, "a", encoding="utf-8") as f:
+        for p in products:
+            row = {"date": date_str, "name": p["name"], "inStock": p["inStock"],
+                   "qty": p["qty"], "price": p["price"]}
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    with open(HISTORY_STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump({"lastDate": date_str}, f)
+
+    log(f"History logged: {len(products)} products for {date_str}.")
 
 
 def main():
@@ -143,6 +171,8 @@ def main():
 
     with open(STOCK_FILE, "w", encoding="utf-8") as f:
         json.dump(products, f, indent=2, ensure_ascii=False)
+
+    append_history(products, datetime.date.today().isoformat())
 
     if changes:
         msg = ("ChemResearch stock change (Primed Peptides):\n" + "\n".join(changes) +

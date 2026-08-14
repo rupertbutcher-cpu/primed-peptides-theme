@@ -5,5 +5,8 @@ current-product-images/
 .chrome-chemresearch-profile/
 chemresearch_products_raw.txt
 chemresearch_stock.json
+chemresearch_stock_history.jsonl
+chemresearch_stock_history_state.json
+chemresearch_stock_history_report.html
 chemresearch_wc_reconcile.json
 __pycache__/
