@@ -117,12 +117,19 @@ def main():
     log("=== run start ===")
     previous = load_previous()
 
+    # Real (non-headless) Chrome, same anti-bot-detection reasoning as chemresearch_login.py -
+    # but this run is unattended, so the window is pushed off-screen rather than made headless.
+    # Headless is a different, detectable code path (missing plugins, WebDriver flag, etc.);
+    # off-screen keeps it a genuinely normal browser window, just not visible on the server's
+    # physical/RDP display.
     proc = subprocess.Popen([
         CHROME_PATH,
         f"--remote-debugging-port={DEBUG_PORT}",
         f"--user-data-dir={PROFILE_DIR}",
         "--no-first-run",
         "--no-default-browser-check",
+        "--window-position=-32000,-32000",
+        "--window-size=1280,900",
         URL,
     ])
     time.sleep(5)
