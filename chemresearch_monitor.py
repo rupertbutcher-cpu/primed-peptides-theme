@@ -70,7 +70,10 @@ WC_LABELS = {
     23: "Semax 20mg (£70)",
 }
 
-MIN_EXPECTED_PRODUCTS = 30  # sanity floor - a real pull has been 44-48; far fewer usually means logged out
+MIN_EXPECTED_PRODUCTS = 8  # sanity floor - cartridges (what Primed Peptides actually buys) has legitimately
+# sat at 18 of the site's 51 total products for a couple of days (2026-08-16, per Rupert) - 30 was set from
+# an unfiltered/all-categories count and false-alerted every run. A real logged-out page shows ~1 product
+# (confirmed 2026-08-14), so 8 still catches that while giving room for cartridge stock to fluctuate.
 
 
 def send_whatsapp(text):
