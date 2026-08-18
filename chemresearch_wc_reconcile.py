@@ -40,8 +40,11 @@ WC_TO_CR = {
     26: "DSIP 10mg Cartridge",                        # DISP Cartridge 5mg
     24: "NAD+ 500mg Cartridge",                       # NAD+ Cartridge 1000mg
     23: "SEMAX 20mg Cartridge",                       # Semax Cartridge 20mg
+    87: "KPV 10mg Cartridge",                         # KPV 10mg Cartridge - added live 2026-08-16
     31: None,  # Kisspeptin Cartridge 5mg - CR only has KISSPEPTIN 10 5mg as a VIAL, no cartridge exists
-    25: None,  # SS31 Cartridge 10mg - CR only has SS-31 10mg as a VIAL, no cartridge exists
+    25: "SS-31 30mg Cartridge",  # SS31 Cartridge 10mg - CR added a real cartridge SKU since this was
+                                  # last checked (was vial-only as of 2026-08-11) - dosage mismatch
+                                  # (10mg vs 30mg) is real and expected to flag, not a bug in the mapping
     22: "SELANK 20mg Cartridge",                      # Selank Cartridge 20mg
     21: None,  # Wolverine Stack Cartridge 20mg - no CR item named "Wolverine"; CR's own
                # "Wolverine" nickname is actually used for the TB-500+BPC-157 cartridge (id 47's match)

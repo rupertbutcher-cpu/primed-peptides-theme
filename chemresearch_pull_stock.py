@@ -14,6 +14,9 @@ from playwright.sync_api import sync_playwright
 DEBUG_PORT = 9227
 
 
+PRICE_RE = re.compile(r'^£[\d.]+$')
+
+
 def parse_products(text):
     lines = [l.strip() for l in text.split('\n')]
     # Find where the product list actually starts - right after the format-filter counts
@@ -30,13 +33,21 @@ def parse_products(text):
             continue
         name = lines[i]
         i += 1
-        # description (may be empty lines before it)
+        # description (may be empty lines before it) - but some products (e.g. blends
+        # sold "per each" rather than "per cartridge") have NO description paragraph at
+        # all and go straight from name to price. Peek ahead: if the next non-blank line
+        # is itself a price, there's no description to consume. Found 2026-08-18 - without
+        # this check every product after the first description-less one silently
+        # misaligns (name/price/stock all shift into the wrong fields).
         while i < len(lines) and not lines[i]:
             i += 1
-        desc = lines[i] if i < len(lines) else ''
-        i += 1
-        while i < len(lines) and not lines[i]:
+        if i < len(lines) and PRICE_RE.match(lines[i]):
+            desc = ''
+        else:
+            desc = lines[i] if i < len(lines) else ''
             i += 1
+            while i < len(lines) and not lines[i]:
+                i += 1
         price_line = lines[i] if i < len(lines) else ''
         price = None
         m = re.match(r'£([\d.]+)', price_line)
