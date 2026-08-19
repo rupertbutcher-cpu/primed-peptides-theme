@@ -9,4 +9,5 @@ chemresearch_stock_history.jsonl
 chemresearch_stock_history_state.json
 chemresearch_stock_history_report.html
 chemresearch_wc_reconcile.json
+peptide_email_monitor_state.json
 __pycache__/
