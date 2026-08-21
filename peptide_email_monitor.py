@@ -9,6 +9,7 @@ to actually run unattended - not yet installed, needs an admin PowerShell on the
 
 Run once: python peptide_email_monitor.py
 """
+import datetime
 import imaplib
 import email
 from email.header import decode_header
@@ -16,7 +17,18 @@ import json
 import os
 import urllib.request
 
-STATE_FILE = os.path.join(os.path.dirname(__file__), "peptide_email_monitor_state.json")
+HERE = os.path.dirname(os.path.abspath(__file__))
+STATE_FILE = os.path.join(HERE, "peptide_email_monitor_state.json")
+LOG_FILE = os.path.join(HERE, "peptide_email_monitor.log")
+
+
+# Runs via pythonw.exe under Task Scheduler (no console window) so stdout goes nowhere -
+# same reasoning as chemresearch_monitor.py's log(): without this, a failing run leaves no
+# trace anywhere. Replaces the bare print() calls below.
+def log(msg):
+    line = f"{datetime.datetime.now().isoformat(timespec='seconds')} {msg}"
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(line + "\n")
 
 MAILBOXES = [
     {
@@ -132,15 +144,15 @@ def main():
             elif new_mail:
                 all_new[mb["name"]] = new_mail
         except Exception as e:
-            print(f"[{mb['name']}] ERROR: {e}")
+            log(f"[{mb['name']}] ERROR: {e}")
 
     save_state(state)
 
     if baselined:
-        print("Baseline recorded (no alert) for:", ", ".join(baselined))
+        log("Baseline recorded (no alert) for: " + ", ".join(baselined))
 
     if not all_new:
-        print("No new mail.")
+        log("No new mail.")
         return
 
     lines = ["New email:"]
@@ -148,7 +160,7 @@ def main():
         for mail in mails:
             lines.append(f"\n[{name}]\nFrom: {mail['from']}\nSubject: {mail['subject']}")
     text = "\n".join(lines)
-    print(text)
+    log(text)
     send_whatsapp(text)
 
 
