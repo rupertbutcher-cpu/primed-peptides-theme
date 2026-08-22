@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 
+// Site Title was left on the WordPress default placeholder ("My WordPress") - fixes
+// the <title> tag shown on every page, browser tab, and search results.
+add_filter('pre_option_blogname', fn() => 'Primed Peptides');
+
 function primed_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
