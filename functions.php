@@ -5,6 +5,34 @@ defined('ABSPATH') || exit;
 // the <title> tag shown on every page, browser tab, and search results.
 add_filter('pre_option_blogname', fn() => 'Primed Peptides');
 
+// No meta description existed anywhere on the site - Google was generating every
+// search snippet automatically. Product pages use the real short description;
+// static pages get a specific one; everything else falls back to a site-wide line.
+add_action('wp_head', function() {
+    $desc = 'UK-made research peptides, third-party tested to 99%+ purity. Research Use Only.';
+    if (is_product()) {
+        // global $product isn't populated yet this early in wp_head - look it up directly
+        $prod = wc_get_product(get_queried_object_id());
+        if ($prod) {
+            $raw = wp_strip_all_tags($prod->get_short_description() ?: $prod->get_description());
+            if ($raw) $desc = wp_trim_words($raw, 30, '...');
+        }
+    } elseif (is_front_page()) {
+        $desc = 'Primed Peptides supplies UK-made research peptides - BPC-157, TB-500, NAD+, Semax and more. Third-party tested, Research Use Only.';
+    } elseif (is_page('about')) {
+        $desc = 'About Primed Peptides: UK-based supplier of research-grade peptides, independently tested for purity.';
+    } elseif (is_page('contact')) {
+        $desc = 'Contact Primed Peptides for research peptide orders and enquiries.';
+    } elseif (is_page('terms-conditions')) {
+        $desc = 'Terms and conditions for ordering research peptides from Primed Peptides.';
+    } elseif (is_page('privacy-policy')) {
+        $desc = 'Privacy policy for Primed Peptides - how we handle your data.';
+    } elseif (is_page('refund_returns')) {
+        $desc = 'Shipping and returns policy for Primed Peptides orders.';
+    }
+    echo '<meta name="description" content="' . esc_attr($desc) . '">' . "\n";
+}, 1);
+
 function primed_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
