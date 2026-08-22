@@ -21,7 +21,7 @@
                 <?php the_custom_logo(); ?>
             <?php else: ?>
                 <a href="<?php echo home_url('/'); ?>" class="site-logo-text">
-                    primed<span>.</span>
+                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/logo-primed.png" alt="Primed Peptides" style="height:34px;width:auto;display:block;">
                 </a>
             <?php endif; ?>
         </div>
