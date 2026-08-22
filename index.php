@@ -80,11 +80,21 @@
 
         <div class="products-grid">
             <?php
+            $product_visibility_terms = wc_get_product_visibility_term_ids();
             $args = [
                 'post_type'      => 'product',
                 'posts_per_page' => -1,
+                'post_status'    => 'publish',
                 'orderby'        => 'menu_order',
                 'order'          => 'ASC',
+                'tax_query'      => [
+                    [
+                        'taxonomy' => 'product_visibility',
+                        'field'    => 'term_taxonomy_id',
+                        'terms'    => $product_visibility_terms['exclude-from-catalog'],
+                        'operator' => 'NOT IN',
+                    ],
+                ],
             ];
             $products = new WP_Query($args);
 
