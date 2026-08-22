@@ -20,7 +20,7 @@
             <ul>
                 <li><a href="<?php echo home_url('/about'); ?>">About Us</a></li>
                 <li><a href="<?php echo home_url('/contact'); ?>">Contact</a></li>
-                <li><a href="<?php echo home_url('/refund-and-returns-policy'); ?>">Shipping & Returns</a></li>
+                <li><a href="<?php echo home_url('/refund_returns'); ?>">Shipping & Returns</a></li>
                 <li><a href="<?php echo home_url('/privacy-policy'); ?>">Privacy Policy</a></li>
                 <li><a href="<?php echo home_url('/terms-conditions'); ?>">Terms & Conditions</a></li>
             </ul>
