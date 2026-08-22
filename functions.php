@@ -146,6 +146,15 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 28);
 
+// Bank-transfer checkout had zero supporting copy anywhere - explains the process
+// once, at the point of purchase, rather than leaving a first-time buyer to guess.
+add_action('woocommerce_single_product_summary', function() {
+    echo '<div class="product-delivery-notice" style="margin-top:8px;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2m9-8a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Orders are paid by bank transfer — place your order, we\'ll email transfer details, and it ships once payment clears (usually same day for UK transfers).
+    </div>';
+}, 29);
+
 // ── Partner & Affiliate Referral System ──
 // Partners: customer pays into partner's bank directly
 // Affiliates: customer pays Primed Peptides, order is tagged for commission tracking
