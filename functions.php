@@ -758,6 +758,95 @@ add_action('wp_footer', function() {
     <?php
 });
 
+// ── Real contact form on the Contact page ──
+// The page itself only ever had a bare mailto: link (no form). Injected via a
+// content filter rather than editing the page's own content, since there's no
+// WP-admin/REST write access available for pages - this needs no page edit at all.
+add_filter('the_content', function($content) {
+    if (!is_page('contact')) return $content;
+    ob_start();
+    ?>
+    <form id="primed-contact-form" style="max-width:480px;margin:32px 0 0;">
+        <p style="margin-bottom:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:600;">Name</label>
+            <input type="text" name="name" required style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:4px;">
+        </p>
+        <p style="margin-bottom:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:600;">Email</label>
+            <input type="email" name="email" required style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:4px;">
+        </p>
+        <p style="margin-bottom:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:600;">How did you hear about us? (optional)</label>
+            <input type="text" name="source" style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:4px;">
+        </p>
+        <p style="margin-bottom:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:600;">Message</label>
+            <textarea name="message" required rows="5" style="width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:4px;"></textarea>
+        </p>
+        <button type="submit" style="padding:12px 28px;background:#1c1e2a;color:#fff;border:none;border-radius:4px;font-weight:600;cursor:pointer;">Send message</button>
+        <span id="primed-contact-msg" style="display:block;margin-top:10px;font-size:14px;"></span>
+    </form>
+    <script>
+    (function() {
+        var form = document.getElementById('primed-contact-form');
+        if (!form) return;
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var msg = document.getElementById('primed-contact-msg');
+            var btn = form.querySelector('button');
+            btn.disabled = true;
+            msg.textContent = 'Sending...';
+            var data = new FormData(form);
+            data.append('action', 'primed_contact_form');
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', { method: 'POST', body: data })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    msg.textContent = d.data.message;
+                    btn.disabled = false;
+                    if (d.success) form.reset();
+                })
+                .catch(function() {
+                    msg.textContent = 'Something went wrong - please try again or email us directly.';
+                    btn.disabled = false;
+                });
+        });
+    })();
+    </script>
+    <?php
+    return $content . ob_get_clean();
+});
+
+add_action('wp_ajax_primed_contact_form', 'primed_contact_form_handler');
+add_action('wp_ajax_nopriv_primed_contact_form', 'primed_contact_form_handler');
+function primed_contact_form_handler() {
+    $name    = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
+    $email   = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+    $source  = isset($_POST['source']) ? sanitize_text_field(wp_unslash($_POST['source'])) : '';
+    $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
+
+    if (!$name || !$email || !is_email($email) || !$message) {
+        wp_send_json_error(['message' => 'Please fill in your name, a valid email, and a message.']);
+    }
+
+    $body = "New contact form enquiry from primedpeptides.co.uk\n\n"
+          . "Name: {$name}\nEmail: {$email}\n"
+          . ($source ? "How they heard about us: {$source}\n" : "")
+          . "\nMessage:\n{$message}";
+
+    $sent = wp_mail(
+        'info@primedpeptides.co.uk',
+        'Contact form enquiry - ' . $name,
+        $body,
+        ['From: Primed Peptides <info@primedpeptides.co.uk>', 'Reply-To: ' . $email]
+    );
+
+    if ($sent) {
+        wp_send_json_success(['message' => "Thanks {$name} - we'll get back to you shortly."]);
+    } else {
+        wp_send_json_error(['message' => 'Something went wrong sending your message - please email us directly at info@primedpeptides.co.uk.']);
+    }
+}
+
 // ── Trustpilot review link on the completed-order email ──
 // Rupert's real, claimed Trustpilot profile: https://uk.trustpilot.com/review/primedpeptides.co.uk
 // (verified live 2026-08-19 — the profile itself is real and loads correctly, even though it
