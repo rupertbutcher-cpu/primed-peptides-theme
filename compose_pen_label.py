@@ -39,6 +39,20 @@ LABEL_BOX = (450, 500, 575, 700)    # lower barrel segment, below silver band
 # so it's curved to look wrapped around the barrel instead of pasted flat.
 QR_BOX = (462, 630, 562, 695)
 
+# The LABEL_BOX above is a loose visual estimate; the pen's real visible
+# barrel within that y-range is much narrower (confirmed via rembg
+# segmentation of master_pen_blank.png: opaque pixels run x=465-558 at
+# every row from y=514 to y=690, a rock-steady ~93px). A wrapped line can
+# pass the box-width check (125px) while still being wider than the whole
+# physical barrel - this is the exact bug that put "Repair & Renewal"
+# (109px) half off the pen (2026-08-25). Wrap/centre against these real
+# measurements instead of LABEL_BOX's own width.
+REAL_BARREL_LEFT = 465
+REAL_BARREL_RIGHT = 558
+REAL_BARREL_CENTER = (REAL_BARREL_LEFT + REAL_BARREL_RIGHT) / 2
+LABEL_MARGIN = 6
+LABEL_MAX_W = (REAL_BARREL_RIGHT - REAL_BARREL_LEFT) - LABEL_MARGIN * 2
+
 
 def cylindrical_wrap(img, extent=0.92, shade_strength=0.21):
     """Horizontally warps a flat image to look wrapped around a cylinder
@@ -104,12 +118,7 @@ def main():
     # --- Label: precise text, drawn directly (guaranteed correct) ---
     draw = ImageDraw.Draw(pen)
     box_x0, box_y0, box_x1, box_y1 = LABEL_BOX
-    box_w = box_x1 - box_x0
-    cx = (box_x0 + box_x1) // 2
-
-    name_font = ImageFont.truetype(FONT_BOLD, 15)
-    dose_font = ImageFont.truetype(FONT_BOLD, 14)
-    fine_font = ImageFont.truetype(FONT_REG, 9)
+    cx = REAL_BARREL_CENTER
 
     def wrap_to_width(text, font, max_w):
         words = text.split()
@@ -126,10 +135,19 @@ def main():
             lines.append(cur)
         return lines
 
-    pad = 8
-    name_lines = wrap_to_width(product_name, name_font, box_w - pad * 2)
-    dose_lines = wrap_to_width(dosage_line, dose_font, box_w - pad * 2)
-    fine_lines = wrap_to_width("Research Use Only - Not for Human Consumption", fine_font, box_w - pad * 2)
+    def fit_and_wrap(text, font_path, start_size, max_w, min_size=8):
+        """Shrinks font size until every wrapped line actually fits the real
+        barrel width, instead of trusting the box estimate."""
+        for size in range(start_size, min_size - 1, -1):
+            font = ImageFont.truetype(font_path, size)
+            lines = wrap_to_width(text, font, max_w)
+            if all(draw.textlength(line, font=font) <= max_w for line in lines):
+                return lines, font
+        return lines, font
+
+    name_lines, name_font = fit_and_wrap(product_name, FONT_BOLD, 15, LABEL_MAX_W)
+    dose_lines, dose_font = fit_and_wrap(dosage_line, FONT_BOLD, 14, LABEL_MAX_W)
+    fine_lines, fine_font = fit_and_wrap("Research Use Only - Not for Human Consumption", FONT_REG, 9, LABEL_MAX_W)
 
     y = box_y0 + 14
     for line in name_lines:
@@ -150,6 +168,10 @@ def main():
     # --- QR code: links to the product-level COA verification page ---
     # Not meant to be scannable from this photo (the real QR goes on the
     # physical product's own label) - curved for visual realism instead.
+    # Positioned dynamically below wherever the text block actually ended -
+    # a fixed QR_BOX y-start collided with fine-print text once real-width
+    # wrapping started producing more lines for longer product names
+    # (2026-08-25, found fixing the "Repair & Renewal" overflow bug above).
     qr = qrcode.QRCode(border=1, box_size=10)
     qr.add_data(COA_URL)
     qr.make(fit=True)
@@ -158,7 +180,7 @@ def main():
     qr_img = qr_img.resize((qr_w, qr_h), Image.LANCZOS)
     qr_img = cylindrical_wrap(qr_img)
     qx = QR_BOX[0] + ((QR_BOX[2] - QR_BOX[0]) - qr_w) // 2
-    qy = QR_BOX[1]
+    qy = y + 6
     pen.alpha_composite(qr_img, (qx, qy))
     tiny_font = ImageFont.truetype(FONT_REG, 7)
     caption = "Scan to verify"
