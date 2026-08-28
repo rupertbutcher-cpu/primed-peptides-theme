@@ -700,6 +700,21 @@ function primed_newsletter_signup() {
         wp_send_json_error(['message' => 'Something went wrong — please try again in a moment.']);
     }
 
+    // Real gap found 2026-08-20 (Rupert): WELCOME10 only ever appeared once, in the on-page
+    // success message — if someone didn't screenshot it, it was gone for good. Sends the same
+    // branded template the referral/review emails already use, so the code has a permanent home
+    // in the subscriber's inbox instead of relying on them to note it down in the moment.
+    primed_send_referral_email(
+        $email,
+        'Here\'s your 10% off code — Primed Peptides',
+        "You're in!",
+        '<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#333;">Thanks for joining our list — here\'s your code for 10% off your first order, whenever you\'re ready.</p>' .
+        '<div style="background:#e8f0fc;border:1px solid #c9dbf5;border-radius:8px;padding:18px;text-align:center;margin:0 0 24px;">' .
+            '<div style="font-size:12px;color:#4a7fd4;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Your 10% off code</div>' .
+            '<div style="font-size:22px;font-weight:700;color:#14181f;letter-spacing:0.02em;">WELCOME10</div>' .
+        '</div>'
+    );
+
     wp_send_json_success([
         'message' => "You're in! Use code WELCOME10 at checkout for 10% off your first order.",
         'coupon'  => 'WELCOME10',
