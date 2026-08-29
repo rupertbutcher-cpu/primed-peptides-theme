@@ -836,6 +836,56 @@ add_filter('the_content', function($content) {
     return $content . ob_get_clean();
 });
 
+// ── Real Privacy Policy, replacing WordPress's default comments/cookies template ──
+// The page previously showed the unedited WP-core default (blog-comment retention,
+// nothing about actual customer/order data) - genuinely misleading for an ecommerce
+// site. Replaces the content entirely, same no-page-edit-access pattern as the
+// Contact page filter above, rather than trying to edit the underlying WP Page.
+add_filter('the_content', function($content) {
+    if (!is_page('privacy-policy')) return $content;
+    ob_start();
+    ?>
+    <p><em>Last updated: August 2026</em></p>
+
+    <h2>Who we are</h2>
+    <p>This website is operated by Premium Wellness Ltd, trading as Primed Peptides ("we", "us", "our"). Our registered office is 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ. You can contact us at <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> or 020 8064 3073.</p>
+
+    <h2>What information we collect</h2>
+    <p>When you place an order or contact us, we collect your name, email address, delivery and billing address, phone number, and order details. If you sign up to our newsletter, we collect your email address. We do not collect or store your payment card details - these are handled directly by our payment provider.</p>
+
+    <h2>How we use your information</h2>
+    <p>We use your information to process and fulfil your orders, communicate with you about your order, respond to enquiries, and - only if you've opted in - send you marketing emails about new products and offers. You can unsubscribe from marketing emails at any time using the link in any email we send.</p>
+
+    <h2>Our legal basis for processing</h2>
+    <p>We process your order and account information because it's necessary to fulfil a contract with you. We send marketing emails only with your consent. We may process limited information on the basis of legitimate interest, for example to prevent fraud or keep our systems secure.</p>
+
+    <h2>Who we share your information with</h2>
+    <p>We share order and delivery details with our warehousing and fulfilment partner and with the courier used to deliver your order (name, address, and contact details only). If you pay by card or PayPal, your payment details are shared directly with our payment provider, who processes them under their own privacy policy. If you subscribe to our newsletter, your email address is held by our email marketing provider. We never sell your personal information to third parties.</p>
+
+    <h2>International transfers</h2>
+    <p>Some of the providers we use (for example our email marketing and payment providers) may process data outside the UK. Where this happens, we rely on providers who maintain appropriate safeguards, such as Standard Contractual Clauses.</p>
+
+    <h2>How long we keep your information</h2>
+    <p>We keep order and transaction records for as long as required for accounting and tax purposes (normally six years). Marketing contact details are kept until you unsubscribe or ask us to delete them.</p>
+
+    <h2>Cookies</h2>
+    <p>We use essential cookies to operate the shopping cart and checkout. If you sign up to our newsletter or dismiss a pop-up, we may also store a small preference cookie so we don't show it again.</p>
+
+    <h2>Your rights</h2>
+    <p>Under UK data protection law, you have the right to access the information we hold about you, ask us to correct or delete it, restrict or object to how we use it, and request a copy in a portable format. To exercise any of these rights, contact us at <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a>. You also have the right to complain to the Information Commissioner's Office (ico.org.uk) if you're unhappy with how we've handled your information.</p>
+
+    <h2>Age restriction</h2>
+    <p>Our products are intended for use by qualified researchers aged 18 and over, and this website is not intended for use by anyone under 18. We do not knowingly collect personal information from anyone under 18.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>We may update this policy from time to time. Any changes will be posted on this page.</p>
+
+    <h2>Contact</h2>
+    <p><a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> · 020 8064 3073 · 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ</p>
+    <?php
+    return ob_get_clean();
+});
+
 add_action('wp_ajax_primed_contact_form', 'primed_contact_form_handler');
 add_action('wp_ajax_nopriv_primed_contact_form', 'primed_contact_form_handler');
 function primed_contact_form_handler() {
