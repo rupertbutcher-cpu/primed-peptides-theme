@@ -781,6 +781,11 @@ add_filter('the_content', function($content) {
     if (!is_page('contact')) return $content;
     ob_start();
     ?>
+    <div style="max-width:480px;margin:24px 0;padding:18px 20px;background:#f6f7f9;border-radius:6px;">
+        <p style="margin:0 0 8px;"><strong>Phone:</strong> <a href="tel:+442080643073">020 8064 3073</a></p>
+        <p style="margin:0 0 8px;"><strong>Email:</strong> <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a></p>
+        <p style="margin:0;"><strong>Registered office:</strong> 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ</p>
+    </div>
     <form id="primed-contact-form" style="max-width:480px;margin:32px 0 0;">
         <p style="margin-bottom:14px;">
             <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:600;">Name</label>

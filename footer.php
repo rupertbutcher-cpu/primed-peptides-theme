@@ -25,6 +25,12 @@
                 <li><a href="<?php echo home_url('/terms-conditions'); ?>">Terms & Conditions</a></li>
             </ul>
         </div>
+        <div class="footer-col">
+            <h4>Get in Touch</h4>
+            <p style="margin:0 0 6px;"><a href="tel:+442080643073" style="color:#cdd6e4;">020 8064 3073</a></p>
+            <p style="margin:0 0 6px;"><a href="mailto:info@primedpeptides.co.uk" style="color:#cdd6e4;">info@primedpeptides.co.uk</a></p>
+            <p style="margin:0;color:#8b93a3;font-size:0.85em;line-height:1.5;">71-75 Shelton Street<br>Covent Garden, London<br>WC2H 9JQ</p>
+        </div>
     </div>
 
     <div class="disclaimer container">
