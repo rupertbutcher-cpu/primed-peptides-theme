@@ -5,6 +5,12 @@ defined('ABSPATH') || exit;
 // the <title> tag shown on every page, browser tab, and search results.
 add_filter('pre_option_blogname', fn() => 'Primed Peptides');
 
+// Google Search Console ownership verification (added 2026-08-29 - neither peptide
+// site was indexed by Google at all before this).
+add_action('wp_head', function() {
+    echo '<meta name="google-site-verification" content="gmk6izxBJhMIBI91ZxunLAZs7JzQHgQuOzJTZjHP6Sk" />' . "\n";
+});
+
 // No meta description existed anywhere on the site - Google was generating every
 // search snippet automatically. Product pages use the real short description;
 // static pages get a specific one; everything else falls back to a site-wide line.
