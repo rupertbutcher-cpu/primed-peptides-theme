@@ -57,7 +57,7 @@ add_action('after_setup_theme', 'primed_setup');
 
 function primed_enqueue() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.3');
+    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.4');
     wp_enqueue_script('primed-main', get_template_directory_uri() . '/assets/js/main.js', ['jquery'], '1.0.1', true);
 
     if (is_woocommerce() || is_cart() || is_checkout()) {

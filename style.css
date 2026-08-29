@@ -1030,4 +1030,11 @@ img { max-width: 100%; height: auto; display: block; }
     .hero { padding: 48px 20px; }
     .hero-stats { gap: 28px; }
     .header-inner { padding: 0 16px; }
+
+    /* .nav-inner was a plain nowrap flex row with no mobile treatment at all - all 9
+       links forced onto one line pushed the whole page ~2x wider than the viewport
+       (confirmed via document.documentElement.scrollWidth), invisible until zoomed
+       out or scrolled sideways. Wrap instead of forcing a single row. */
+    .nav-inner { flex-wrap: wrap; padding: 8px 16px; justify-content: center; }
+    .nav-inner a { padding: 6px 10px; font-size: 12px; }
 }
