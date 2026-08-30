@@ -35,6 +35,8 @@ add_action('wp_head', function() {
         $desc = 'Privacy policy for Primed Peptides - how we handle your data.';
     } elseif (is_page('refund_returns')) {
         $desc = 'Shipping and returns policy for Primed Peptides orders.';
+    } elseif (untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === '/coa') {
+        $desc = 'Certificate of Analysis lookup for Primed Peptides research materials - independent third-party purity and identity testing.';
     }
     echo '<meta name="description" content="' . esc_attr($desc) . '">' . "\n";
 }, 1);
@@ -152,14 +154,61 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 28);
 
-// Bank-transfer checkout had zero supporting copy anywhere - explains the process
-// once, at the point of purchase, rather than leaving a first-time buyer to guess.
+// Stale as of 2026-08-29: bank transfer (bacs) was disabled the same day PayPal
+// Payments went live (see corrections/master_todo) - this notice was still telling
+// every visitor to expect a bank-transfer checkout, which hasn't been true for a
+// live, real order since. Found while working on an unrelated page, fixed same day.
 add_action('woocommerce_single_product_summary', function() {
     echo '<div class="product-delivery-notice" style="margin-top:8px;">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2m9-8a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Orders are paid by bank transfer — place your order, we\'ll email transfer details, and it ships once payment clears (usually same day for UK transfers).
+        Pay securely by PayPal or Credit/Debit Card at checkout — no account required.
     </div>';
 }, 29);
+
+// ── Product page: Quick Start Guide + FAQ ──
+// Added 2026-08-30. Deliberately scoped to format/handling/logistics only - no
+// dosing, reconstitution, or administration guidance. These are RUO products
+// ("not for human or veterinary use"); checked a real UK competitor in this
+// exact category (peptonline.com) before writing this and confirmed they
+// deliberately omit usage instructions for the same reason - publishing a
+// "how to use" guide here would directly contradict the RUO disclaimer on
+// the same page. Stack-combination questions are also left out on purpose -
+// blocked on Danny's pairing guidance, not guessed.
+add_action('woocommerce_after_single_product_summary', function() {
+    ?>
+    <div class="product-info-block">
+        <h3>Quick Start Guide</h3>
+        <ol>
+            <li>Check your Certificate of Analysis — scan the QR code on your product, or visit <a href="/coa/">primedpeptides.co.uk/coa</a>.</li>
+            <li>This product ships as a stabilised cartridge, compatible with the Primed Peptides reusable pen (sold separately).</li>
+            <li>Store in a cool, dry place away from direct sunlight.</li>
+            <li>Questions? Email <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a>.</li>
+        </ol>
+
+        <h3 style="margin-top:28px;">FAQs</h3>
+        <details>
+            <summary>Is this product for human use?</summary>
+            <p>No. All Primed Peptides products are supplied for laboratory and research use only, not for human or veterinary use.</p>
+        </details>
+        <details>
+            <summary>How is purity verified?</summary>
+            <p>Every batch is tested by an independent third-party laboratory for purity (minimum 99%) and identity before release. See our <a href="/coa/">Certificate of Analysis</a> page.</p>
+        </details>
+        <details>
+            <summary>What does "stabilised cartridge" mean?</summary>
+            <p>Our cartridges use a stabilised formulation designed for a 12-month shelf life when stored as directed, rather than shipping as a raw lyophilised vial.</p>
+        </details>
+        <details>
+            <summary>How quickly will my order ship?</summary>
+            <p>Tracked 24 delivery, dispatched same day on orders placed before 2pm.</p>
+        </details>
+        <details>
+            <summary>How do I pay?</summary>
+            <p>PayPal or Credit/Debit Card at checkout — no PayPal account required to pay by card.</p>
+        </details>
+    </div>
+    <?php
+}, 25);
 
 // ── Partner & Affiliate Referral System ──
 // Partners: customer pays into partner's bank directly
@@ -777,6 +826,53 @@ add_action('wp_footer', function() {
     })();
     </script>
     <?php
+});
+
+// ── Certificate of Analysis page (/coa/) ──
+// QR codes already printed on physical products point here, but no WP Page
+// exists with this slug and there's no WP-admin/REST write access to create
+// one - the_content filter trick needs a real page object to attach to,
+// which this doesn't have. Intercepts the request before WP's 404 template
+// loads instead (standard "virtual page" technique), so it needs no page to
+// exist in the database at all. Rupert's own decision, 2026-08-29: no lab
+// name/accreditation until Danny confirms it - "leave the coa page saying
+// to email us if they want it for now."
+add_action('template_redirect', function() {
+    $path = untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+    if ($path !== '/coa') return;
+
+    status_header(200);
+    global $wp_query;
+    $wp_query->is_404 = false;
+
+    get_header();
+    ?>
+    <div class="woocommerce-page">
+        <div class="woocommerce">
+            <h1>Certificate of Analysis</h1>
+            <p>Every batch of Primed Peptides research material is tested by an independent third-party laboratory before it's released for sale, confirming purity (minimum 99%) and identity against its stated specification.</p>
+
+            <h2>What we test for</h2>
+            <ul>
+                <li>Purity (HPLC analysis)</li>
+                <li>Identity confirmation</li>
+            </ul>
+
+            <h2>Find your batch</h2>
+            <p>Scanned the QR code on your product to get here? Batch-specific results are published on this page as each batch is tested and released. If you can't find yours listed yet, email <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> with your product name and batch/lot number and we'll send the Certificate of Analysis directly.</p>
+
+            <p style="margin-top:32px;padding-top:20px;border-top:1px solid #e5e5e5;font-size:14px;color:#555;"><strong>Research Use Only.</strong> All products sold by Primed Peptides are intended for laboratory and research use only, not for human or veterinary use.</p>
+        </div>
+    </div>
+    <?php
+    get_footer();
+    exit;
+});
+
+add_filter('document_title_parts', function($parts) {
+    $path = untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+    if ($path === '/coa') $parts['title'] = 'Certificate of Analysis';
+    return $parts;
 });
 
 // ── Real contact form on the Contact page ──

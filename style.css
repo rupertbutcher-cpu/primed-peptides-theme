@@ -680,6 +680,47 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: 20px;
 }
 
+/* Product FAQ / Quick Start accordion (added 2026-08-30) */
+.product-info-block {
+    max-width: 720px;
+    margin: 36px 0;
+}
+.product-info-block h3 {
+    font-size: 18px;
+    margin: 0 0 12px;
+}
+.product-info-block ol {
+    margin: 0 0 8px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+.product-info-block details {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+}
+.product-info-block summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    list-style: none;
+}
+.product-info-block summary::-webkit-details-marker { display: none; }
+.product-info-block summary::after {
+    content: '+';
+    float: right;
+    color: var(--blue);
+    font-weight: 700;
+}
+.product-info-block details[open] summary::after { content: '\2212'; }
+.product-info-block details p {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
 /* Quantity + Add to cart */
 .woocommerce div.product form.cart {
     display: flex;
