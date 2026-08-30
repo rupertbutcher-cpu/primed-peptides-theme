@@ -11,3 +11,7 @@ chemresearch_stock_history_report.html
 chemresearch_wc_reconcile.json
 peptide_email_monitor_state.json
 __pycache__/
+# Factory sample/packaging photos pulled from email 2026-08-30. Deliberately
+# NOT committed: this repo is public, and these show the full printed range
+# including a product that shouldn't be sold in the UK (see project memory).
+real-box-photos/
