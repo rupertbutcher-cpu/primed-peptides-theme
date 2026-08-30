@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
 
+// Articles hub (/articles/ + /articles/<slug>/) - theme-defined content, see
+// the file's own header for why it isn't built on WordPress posts.
+require_once get_template_directory() . '/articles.php';
+
 // Site Title was left on the WordPress default placeholder ("My WordPress") - fixes
 // the <title> tag shown on every page, browser tab, and search results.
 add_filter('pre_option_blogname', fn() => 'Primed Peptides');
@@ -37,6 +41,15 @@ add_action('wp_head', function() {
         $desc = 'Shipping and returns policy for Primed Peptides orders.';
     } elseif (untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === '/coa') {
         $desc = 'Certificate of Analysis lookup for Primed Peptides research materials - independent third-party purity and identity testing.';
+    } else {
+        $reqPath = untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        if ($reqPath === '/articles') {
+            $desc = 'Explainers on peptide chemistry, handling and storage, and how purity and identity are actually verified.';
+        } elseif (strpos($reqPath, '/articles/') === 0 && function_exists('primed_articles')) {
+            $arts = primed_articles();
+            $s = substr($reqPath, strlen('/articles/'));
+            if (isset($arts[$s])) $desc = $arts[$s]['excerpt'];
+        }
     }
     echo '<meta name="description" content="' . esc_attr($desc) . '">' . "\n";
 }, 1);
@@ -59,7 +72,7 @@ add_action('after_setup_theme', 'primed_setup');
 
 function primed_enqueue() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.4');
+    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.5');
     wp_enqueue_script('primed-main', get_template_directory_uri() . '/assets/js/main.js', ['jquery'], '1.0.1', true);
 
     if (is_woocommerce() || is_cart() || is_checkout()) {

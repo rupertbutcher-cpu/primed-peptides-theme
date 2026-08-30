@@ -50,6 +50,7 @@
         <a href="<?php echo home_url('/?cat=performance'); ?>">Performance</a>
         <a href="<?php echo home_url('/?cat=aesthetic'); ?>">Aesthetic & Skin</a>
         <a href="<?php echo home_url('/?cat=accessories'); ?>">Accessories</a>
+        <a href="<?php echo home_url('/articles/'); ?>">Articles</a>
         <a href="<?php echo home_url('/about'); ?>">About</a>
         <a href="<?php echo home_url('/contact'); ?>">Contact</a>
     </div>

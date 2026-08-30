@@ -680,6 +680,87 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: 20px;
 }
 
+/* Articles hub (added 2026-08-30) */
+.articles-wrap { max-width: 900px; margin: 0 auto; padding: 8px 0 48px; }
+.articles-intro {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 62ch;
+    margin: 0 0 28px;
+}
+.articles-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.af-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+}
+.af-btn:hover { border-color: var(--blue); color: var(--blue-dark); }
+.af-btn.is-active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+}
+.article-card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .15s, border-color .15s;
+}
+.article-card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 4px 14px rgba(58,143,196,0.12);
+    color: inherit;
+}
+.article-card h2 { font-size: 17px; margin: 8px 0 8px; line-height: 1.35; }
+.article-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0 0 12px; }
+.article-cat {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+}
+.article-meta { font-size: 12px; color: var(--text-muted); }
+
+.article-single { max-width: 680px; }
+.article-back {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.article-single h1 { font-size: 30px; line-height: 1.25; margin: 8px 0 10px; }
+.article-body { margin-top: 24px; }
+.article-body p { font-size: 16px; line-height: 1.75; margin: 0 0 18px; }
+.article-body h2 { font-size: 20px; margin: 32px 0 12px; }
+.article-body ul { font-size: 16px; line-height: 1.75; padding-left: 22px; margin: 0 0 18px; }
+.article-body li { margin-bottom: 8px; }
+.article-ruo {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+    .article-single h1 { font-size: 24px; }
+    .article-body p, .article-body ul { font-size: 15px; }
+}
+
 /* Product FAQ / Quick Start accordion (added 2026-08-30) */
 .product-info-block {
     max-width: 720px;
