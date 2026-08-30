@@ -124,7 +124,9 @@ def main():
     # but this run is unattended, so the window is pushed off-screen rather than made headless.
     # Headless is a different, detectable code path (missing plugins, WebDriver flag, etc.);
     # off-screen keeps it a genuinely normal browser window, just not visible on the server's
-    # physical/RDP display.
+    # physical/RDP display. Also --start-minimized (2026-08-30): the task runs in Rupert's own
+    # interactive RDP session, and Windows can snap an off-screen window back on-screen when
+    # that session reconnects - minimized keeps it out of the way even if that happens.
     proc = subprocess.Popen([
         CHROME_PATH,
         f"--remote-debugging-port={DEBUG_PORT}",
@@ -133,6 +135,7 @@ def main():
         "--no-default-browser-check",
         "--window-position=-32000,-32000",
         "--window-size=1280,900",
+        "--start-minimized",
         URL,
     ])
     time.sleep(5)
