@@ -178,6 +178,82 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 29);
 
+// ── Product structured data: brand, shipping and returns ──
+// Added 2026-08-30. Search Console flagged these on premiumpeptide.uk; the
+// same gaps exist here (WooCommerce's own Product schema omits brand,
+// shippingDetails, hasMerchantReturnPolicy and validFrom), so fixing both
+// rather than waiting for Google to report it separately.
+//
+// Every value mirrors a real published policy on this site - this markup makes
+// public claims Google cross-checks against actual page content:
+//   - £4.95 flat UK shipping, free over £100 = the real WooCommerce UK zone rates
+//   - same-day dispatch before 2pm, Tracked 24 = the delivery notice already on
+//     every product page
+//   - 14-day return window, unopened/unused only = /refund_returns/ verbatim
+//
+// Deliberately NOT added: aggregateRating and review. There are genuinely no
+// reviews on this site, and the only way to satisfy those fields is review
+// markup - fabricating it risks a Google manual action. They resolve on their
+// own once real reviews exist.
+add_filter('woocommerce_structured_data_product', function($markup, $product) {
+    $markup['brand'] = [
+        '@type' => 'Brand',
+        'name'  => 'Primed Peptides',
+    ];
+
+    $shipping = [
+        '@type'        => 'OfferShippingDetails',
+        'shippingRate' => [
+            '@type'    => 'MonetaryAmount',
+            'value'    => '4.95',
+            'currency' => 'GBP',
+        ],
+        'shippingDestination' => [
+            '@type'          => 'DefinedRegion',
+            'addressCountry' => 'GB',
+        ],
+        'deliveryTime' => [
+            '@type'        => 'ShippingDeliveryTime',
+            // Dispatched same day on orders before 2pm.
+            'handlingTime' => [
+                '@type'    => 'QuantitativeValue',
+                'minValue' => 0,
+                'maxValue' => 1,
+                'unitCode' => 'DAY',
+            ],
+            // Royal Mail Tracked 24.
+            'transitTime'  => [
+                '@type'    => 'QuantitativeValue',
+                'minValue' => 1,
+                'maxValue' => 2,
+                'unitCode' => 'DAY',
+            ],
+        ],
+    ];
+
+    $returns = [
+        '@type'                => 'MerchantReturnPolicy',
+        'applicableCountry'    => 'GB',
+        'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        // Claims must be raised within 14 days of delivery, per /refund_returns/.
+        'merchantReturnDays'   => 14,
+        'returnMethod'         => 'https://schema.org/ReturnByMail',
+        'returnFees'           => 'https://schema.org/ReturnShippingFees',
+    ];
+
+    if (!empty($markup['offers']) && is_array($markup['offers'])) {
+        foreach ($markup['offers'] as $i => $offer) {
+            $markup['offers'][$i]['shippingDetails']         = $shipping;
+            $markup['offers'][$i]['hasMerchantReturnPolicy'] = $returns;
+            if (empty($offer['validFrom'])) {
+                $markup['offers'][$i]['validFrom'] = get_the_date('Y-m-d', $product->get_id());
+            }
+        }
+    }
+
+    return $markup;
+}, 10, 2);
+
 // ── Product page: Quick Start Guide + FAQ ──
 // Added 2026-08-30. Deliberately scoped to format/handling/logistics only - no
 // dosing, reconstitution, or administration guidance. These are RUO products
