@@ -216,6 +216,34 @@ add_filter('wp_sitemaps_posts_query_args', function($args, $post_type) {
     return $args;
 }, 10, 2);
 
+// Free shipping on the test product, so a test checkout costs exactly £1
+// rather than £1 + £4.95 (this site's free-shipping threshold is £100, which a
+// £1 order obviously won't reach).
+//
+// Deliberately only fires when the cart contains NOTHING BUT the test product.
+// Anyone with the secret link could otherwise drop it into a real basket and
+// get free shipping on a genuine order - unlikely, but it costs nothing to
+// close. Kept as a rate override rather than marking the product 'virtual',
+// so the checkout still exercises the full address + shipping flow, which is
+// the point of a payment test.
+add_filter('woocommerce_package_rates', function($rates, $package) {
+    if (!WC()->cart) return $rates;
+    $items = WC()->cart->get_cart();
+    if (empty($items)) return $rates;
+
+    foreach ($items as $item) {
+        if ((int) $item['product_id'] !== PRIMED_TEST_PRODUCT_ID) {
+            return $rates;   // a real product is present - leave rates alone
+        }
+    }
+    foreach ($rates as $id => $rate) {
+        $rates[$id]->cost  = 0;
+        $rates[$id]->label = 'Royal Mail Tracked 24 — Free';
+        $rates[$id]->taxes = [];
+    }
+    return $rates;
+}, 20, 2);
+
 // ── Product structured data: brand, shipping and returns ──
 // Added 2026-08-30. Search Console flagged these on premiumpeptide.uk; the
 // same gaps exist here (WooCommerce's own Product schema omits brand,
