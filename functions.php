@@ -72,7 +72,7 @@ add_action('after_setup_theme', 'primed_setup');
 
 function primed_enqueue() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.5');
+    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.6');
     wp_enqueue_script('primed-main', get_template_directory_uri() . '/assets/js/main.js', ['jquery'], '1.0.1', true);
 
     if (is_woocommerce() || is_cart() || is_checkout()) {
@@ -201,33 +201,57 @@ add_filter('woocommerce_structured_data_product', function($markup, $product) {
         'name'  => 'Primed Peptides',
     ];
 
+    // Dispatched same day before 2pm (0-1 days handling), Royal Mail Tracked 24
+    // (1-2 days transit) - both from the delivery notice already on every
+    // product page.
+    $deliveryTime = [
+        '@type'        => 'ShippingDeliveryTime',
+        'handlingTime' => [
+            '@type' => 'QuantitativeValue', 'minValue' => 0, 'maxValue' => 1, 'unitCode' => 'DAY',
+        ],
+        'transitTime'  => [
+            '@type' => 'QuantitativeValue', 'minValue' => 1, 'maxValue' => 2, 'unitCode' => 'DAY',
+        ],
+    ];
+    $destination = ['@type' => 'DefinedRegion', 'addressCountry' => 'GB'];
+
+    // Two real rates, not one. This site's WooCommerce UK zone has BOTH a
+    // £4.95 flat rate and a free_shipping method with min_amount 100, so
+    // shipping is genuinely free over £100. The first version of this markup
+    // (earlier on 2026-08-30) claimed a flat £4.95 on every product, which is
+    // wrong for anything over the threshold - and most of this catalogue is.
+    // Google cross-checks this against the page, so it has to match.
     $shipping = [
-        '@type'        => 'OfferShippingDetails',
-        'shippingRate' => [
-            '@type'    => 'MonetaryAmount',
-            'value'    => '4.95',
-            'currency' => 'GBP',
-        ],
-        'shippingDestination' => [
-            '@type'          => 'DefinedRegion',
-            'addressCountry' => 'GB',
-        ],
-        'deliveryTime' => [
-            '@type'        => 'ShippingDeliveryTime',
-            // Dispatched same day on orders before 2pm.
-            'handlingTime' => [
-                '@type'    => 'QuantitativeValue',
-                'minValue' => 0,
-                'maxValue' => 1,
-                'unitCode' => 'DAY',
+        [
+            '@type'        => 'OfferShippingDetails',
+            'shippingRate' => [
+                '@type'    => 'MonetaryAmount',
+                'value'    => '4.95',
+                'currency' => 'GBP',
+                'eligibleTransactionVolume' => [
+                    '@type'         => 'PriceSpecification',
+                    'priceCurrency' => 'GBP',
+                    'minPrice'      => 0,
+                    'maxPrice'      => 99.99,
+                ],
             ],
-            // Royal Mail Tracked 24.
-            'transitTime'  => [
-                '@type'    => 'QuantitativeValue',
-                'minValue' => 1,
-                'maxValue' => 2,
-                'unitCode' => 'DAY',
+            'shippingDestination' => $destination,
+            'deliveryTime'        => $deliveryTime,
+        ],
+        [
+            '@type'        => 'OfferShippingDetails',
+            'shippingRate' => [
+                '@type'    => 'MonetaryAmount',
+                'value'    => '0',
+                'currency' => 'GBP',
+                'eligibleTransactionVolume' => [
+                    '@type'         => 'PriceSpecification',
+                    'priceCurrency' => 'GBP',
+                    'minPrice'      => 100,
+                ],
             ],
+            'shippingDestination' => $destination,
+            'deliveryTime'        => $deliveryTime,
         ],
     ];
 

@@ -680,6 +680,19 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: 20px;
 }
 
+/* Preventive: WooCommerce hover-zoom injects a full-size <img class="zoomImg">
+   over the gallery, which caused real horizontal overflow on Premium's product
+   pages at 390px (1024px wide image, page scrollWidth 510 vs 390 viewport).
+   Primed measured clean only because its current product images are smaller -
+   the same theme support is enabled here, so this is one image swap away from
+   the same bug. Hover-zoom is meaningless on touch anyway. Added 2026-08-30. */
+@media (max-width: 768px) {
+    .woocommerce div.product .images .zoomImg,
+    .woocommerce-product-gallery .zoomImg {
+        display: none !important;
+    }
+}
+
 /* Articles hub (added 2026-08-30) */
 .articles-wrap { max-width: 900px; margin: 0 auto; padding: 8px 0 48px; }
 .articles-intro {
