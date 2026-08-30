@@ -5,6 +5,9 @@ defined('ABSPATH') || exit;
 // the file's own header for why it isn't built on WordPress posts.
 require_once get_template_directory() . '/articles.php';
 
+// Site-wide FAQ (/faq/) - same virtual-page technique, same reason.
+require_once get_template_directory() . '/faq.php';
+
 // Site Title was left on the WordPress default placeholder ("My WordPress") - fixes
 // the <title> tag shown on every page, browser tab, and search results.
 add_filter('pre_option_blogname', fn() => 'Primed Peptides');
@@ -43,7 +46,9 @@ add_action('wp_head', function() {
         $desc = 'Certificate of Analysis lookup for Primed Peptides research materials - independent third-party purity and identity testing.';
     } else {
         $reqPath = untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-        if ($reqPath === '/articles') {
+        if ($reqPath === '/faq') {
+            $desc = 'Answers on ordering, delivery, returns, third-party testing, and what Research Use Only means.';
+        } elseif ($reqPath === '/articles') {
             $desc = 'Explainers on peptide chemistry, handling and storage, and how purity and identity are actually verified.';
         } elseif (strpos($reqPath, '/articles/') === 0 && function_exists('primed_articles')) {
             $arts = primed_articles();
@@ -72,7 +77,7 @@ add_action('after_setup_theme', 'primed_setup');
 
 function primed_enqueue() {
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', [], null);
-    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.6');
+    wp_enqueue_style('primed-style', get_stylesheet_uri(), [], '1.0.7');
     wp_enqueue_script('primed-main', get_template_directory_uri() . '/assets/js/main.js', ['jquery'], '1.0.1', true);
 
     if (is_woocommerce() || is_cart() || is_checkout()) {

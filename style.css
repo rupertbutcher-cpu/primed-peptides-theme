@@ -680,6 +680,38 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: 20px;
 }
 
+/* Site-wide FAQ page (added 2026-08-30) - reuses the product accordion styling */
+.faq-section { margin-bottom: 34px; }
+.faq-section h2 { font-size: 20px; margin: 0 0 10px; }
+.faq-section details {
+    border-bottom: 1px solid var(--border);
+    padding: 13px 0;
+}
+.faq-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    list-style: none;
+    padding-right: 24px;
+    position: relative;
+}
+.faq-section summary::-webkit-details-marker { display: none; }
+.faq-section summary::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--blue);
+    font-weight: 700;
+}
+.faq-section details[open] summary::after { content: '\2212'; }
+.faq-section details p {
+    margin: 10px 0 0;
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
 /* Preventive: WooCommerce hover-zoom injects a full-size <img class="zoomImg">
    over the gallery, which caused real horizontal overflow on Premium's product
    pages at 390px (1024px wide image, page scrollWidth 510 vs 390 viewport).
