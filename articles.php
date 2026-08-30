@@ -241,3 +241,55 @@ add_filter('document_title_parts', function($parts) {
     }
     return $parts;
 });
+
+/**
+ * Put the virtual pages into wp-sitemap.xml.
+ *
+ * Added 2026-08-30, immediately after building them. WordPress generates its
+ * sitemap from real database posts/pages, so /coa/, /faq/, /articles/ and the
+ * individual articles were completely absent from it - invisible to Google
+ * except by following nav links. Given the articles hub exists specifically
+ * for search discovery on a brand-new domain with no backlinks, that gap
+ * defeated most of the point.
+ *
+ * Registers a custom provider, which appears as wp-sitemap-primedpages-1.xml
+ * inside the existing sitemap index. Anonymous class defined inside init
+ * because WP_Sitemaps_Provider isn't loaded when this file is required.
+ */
+add_action('init', function() {
+    if (!function_exists('wp_register_sitemap_provider') || !class_exists('WP_Sitemaps_Provider')) {
+        return;
+    }
+    wp_register_sitemap_provider('primedpages', new class extends WP_Sitemaps_Provider {
+        public function __construct() {
+            $this->name        = 'primedpages';
+            $this->object_type = 'page';
+        }
+        public function get_url_list($page_num, $object_subtype = '') {
+            $urls = [
+                home_url('/coa/'),
+                home_url('/faq/'),
+                home_url('/articles/'),
+            ];
+            foreach (array_keys(primed_articles()) as $slug) {
+                $urls[] = home_url('/articles/' . $slug . '/');
+            }
+            return array_map(function($u) { return ['loc' => $u]; }, $urls);
+        }
+        public function get_max_num_pages($object_subtype = '') {
+            return 1;
+        }
+    });
+}, 20);
+
+// Registering a new sitemap provider adds a rewrite rule, and without a flush
+// WordPress serves the homepage HTML at wp-sitemap-primedpages-1.xml instead
+// of the XML (confirmed live 2026-08-30 - the index listed the file but the
+// file itself returned the theme's homepage). Runs once, then self-disables.
+// Priority 30 so it lands after the provider registration at 20.
+add_action('init', function() {
+    if (get_option('primed_sitemap_flushed_v2') !== 'yes') {
+        flush_rewrite_rules();
+        update_option('primed_sitemap_flushed_v2', 'yes');
+    }
+}, 30);
