@@ -183,6 +183,39 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 29);
 
+// ── Private payment-test product (id 127) ──
+// Rupert 2026-08-30: wants the £1 test product reachable by direct link only -
+// not through the menu, shop, or search - so real checkouts can be tested
+// without customers finding it.
+//
+// WooCommerce's own catalog_visibility:hidden gets it out of the shop and site
+// search, but does NOT hide it from Google: that exact combination is what
+// caused today's critical Search Console "Missing field 'image'" error, because
+// the URL stayed publicly crawlable and got indexed. So hidden visibility alone
+// is not enough. These two rules close the remaining gap:
+//   1. noindex/nofollow on that product only
+//   2. exclude it from wp-sitemap.xml, which lists every published product
+// Together with an unguessable slug, the link works for anyone who has it and
+// is effectively undiscoverable for anyone who doesn't.
+define('PRIMED_TEST_PRODUCT_ID', 127);
+
+add_filter('wp_robots', function($robots) {
+    if (is_singular('product') && get_queried_object_id() === PRIMED_TEST_PRODUCT_ID) {
+        $robots['noindex']  = true;
+        $robots['nofollow'] = true;
+        unset($robots['max-image-preview'], $robots['max-snippet'], $robots['max-video-preview']);
+    }
+    return $robots;
+});
+
+add_filter('wp_sitemaps_posts_query_args', function($args, $post_type) {
+    if ($post_type === 'product') {
+        $existing = isset($args['post__not_in']) ? (array) $args['post__not_in'] : [];
+        $args['post__not_in'] = array_merge($existing, [PRIMED_TEST_PRODUCT_ID]);
+    }
+    return $args;
+}, 10, 2);
+
 // ── Product structured data: brand, shipping and returns ──
 // Added 2026-08-30. Search Console flagged these on premiumpeptide.uk; the
 // same gaps exist here (WooCommerce's own Product schema omits brand,
