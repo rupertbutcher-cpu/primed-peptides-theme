@@ -216,6 +216,16 @@ add_filter('wp_sitemaps_posts_query_args', function($args, $post_type) {
     return $args;
 }, 10, 2);
 
+// Drop wp-sitemap-users-1.xml (2026-08-31). WordPress publishes an author sitemap listing
+// every user with published posts, which hands out a valid username to anyone who fetches it
+// - a free head start for credential stuffing against a shop that takes card payments.
+// It buys nothing here: this is a product catalogue, not author-led content, and no author
+// archive is ever a useful search result for it.
+// Removing the provider makes the URL 404 and drops it from the sitemap index.
+add_filter('wp_sitemaps_add_provider', function($provider, $name) {
+    return ($name === 'users') ? false : $provider;
+}, 10, 2);
+
 // Free shipping on the test product, so a test checkout costs exactly £1
 // rather than £1 + £4.95 (this site's free-shipping threshold is £100, which a
 // £1 order obviously won't reach).
