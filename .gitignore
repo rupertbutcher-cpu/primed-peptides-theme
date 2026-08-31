@@ -15,3 +15,7 @@ __pycache__/
 # NOT committed: this repo is public, and these show the full printed range
 # including a product that shouldn't be sold in the UK (see project memory).
 real-box-photos/
+
+# All automation Chrome profiles - these hold live session cookies and logins.
+# This repo is PUBLIC; committing one would leak authenticated sessions.
+.chrome-*/

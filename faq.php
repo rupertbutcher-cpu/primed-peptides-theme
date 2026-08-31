@@ -53,7 +53,7 @@ function primed_faq_sections() {
         'Quality &amp; Testing' => [
             [
                 'Is your material third-party tested?',
-                'Yes. Every batch is tested by an independent third-party laboratory &mdash; independent of manufacturing &mdash; for purity and identity before it\'s released for sale.',
+                'Every batch is produced with a Certificate of Analysis confirming purity (minimum 99%) and identity before release. Independent third-party verification through Janoshik Analytical &mdash; a laboratory entirely separate from manufacturing &mdash; is available on request for any batch.',
             ],
             [
                 'What does "99%+ purity" actually mean?',

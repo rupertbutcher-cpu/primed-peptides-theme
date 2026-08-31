@@ -22,7 +22,7 @@ add_action('wp_head', function() {
 // search snippet automatically. Product pages use the real short description;
 // static pages get a specific one; everything else falls back to a site-wide line.
 add_action('wp_head', function() {
-    $desc = 'UK-made research peptides, third-party tested to 99%+ purity. Research Use Only.';
+    $desc = 'UK-made research peptides, 99%+ purity with a Certificate of Analysis for every batch. Research Use Only.';
     if (is_product()) {
         // global $product isn't populated yet this early in wp_head - look it up directly
         $prod = wc_get_product(get_queried_object_id());
@@ -33,7 +33,7 @@ add_action('wp_head', function() {
     } elseif (is_front_page()) {
         $desc = 'Primed Peptides supplies UK-made research peptides - BPC-157, TB-500, NAD+, Semax and more. Third-party tested, Research Use Only.';
     } elseif (is_page('about')) {
-        $desc = 'About Primed Peptides: UK-based supplier of research-grade peptides, independently tested for purity.';
+        $desc = 'About Primed Peptides: UK-based supplier of research-grade peptides, with a Certificate of Analysis for every batch.';
     } elseif (is_page('contact')) {
         $desc = 'Contact Primed Peptides for research peptide orders and enquiries.';
     } elseif (is_page('terms-conditions')) {
@@ -43,11 +43,11 @@ add_action('wp_head', function() {
     } elseif (is_page('refund_returns')) {
         $desc = 'Shipping and returns policy for Primed Peptides orders.';
     } elseif (untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === '/coa') {
-        $desc = 'Certificate of Analysis lookup for Primed Peptides research materials - independent third-party purity and identity testing.';
+        $desc = 'Certificate of Analysis lookup for Primed Peptides research materials - batch purity and identity documentation.';
     } else {
         $reqPath = untrailingslashit(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         if ($reqPath === '/faq') {
-            $desc = 'Answers on ordering, delivery, returns, third-party testing, and what Research Use Only means.';
+            $desc = 'Answers on ordering, delivery, returns, batch testing, and what Research Use Only means.';
         } elseif ($reqPath === '/articles') {
             $desc = 'Explainers on peptide chemistry, handling and storage, and how purity and identity are actually verified.';
         } elseif (strpos($reqPath, '/articles/') === 0 && function_exists('primed_articles')) {
@@ -136,7 +136,7 @@ add_filter('woocommerce_product_tabs', function($tabs) {
 
 function primed_coa_tab_content() {
     echo '<h2>Certificate of Analysis</h2>';
-    echo '<p>All Primed Peptides products are independently third-party tested for purity and potency. Every batch achieves 99%+ purity.</p>';
+    echo '<p>Every batch is produced with a Certificate of Analysis confirming purity (minimum 99%) and identity. Independent third-party verification through Janoshik Analytical is available on request.</p>';
     echo '<p>To request a Certificate of Analysis for a specific batch, please email us at <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> with your order number.</p>';
 }
 
@@ -371,7 +371,7 @@ add_action('woocommerce_after_single_product_summary', function() {
         </details>
         <details>
             <summary>How is purity verified?</summary>
-            <p>Every batch is tested by an independent third-party laboratory for purity (minimum 99%) and identity before release. See our <a href="/coa/">Certificate of Analysis</a> page.</p>
+            <p>Every batch is produced with a Certificate of Analysis confirming purity (minimum 99%) and identity. Independent third-party verification through Janoshik Analytical is available on request. See our <a href="/coa/">Certificate of Analysis</a> page.</p>
         </details>
         <details>
             <summary>What does "stabilised cartridge" mean?</summary>
@@ -1029,7 +1029,7 @@ add_action('template_redirect', function() {
     <div class="woocommerce-page">
         <div class="woocommerce">
             <h1>Certificate of Analysis</h1>
-            <p>Every batch of Primed Peptides research material is tested by an independent third-party laboratory before it's released for sale, confirming purity (minimum 99%) and identity against its stated specification.</p>
+            <p>Every batch of Primed Peptides research material is released with a Certificate of Analysis confirming purity (minimum 99%) and identity against its stated specification. Independent third-party verification through Janoshik Analytical &mdash; a laboratory entirely separate from manufacturing &mdash; can be arranged for any batch on request.</p>
 
             <h2>What we test for</h2>
             <ul>

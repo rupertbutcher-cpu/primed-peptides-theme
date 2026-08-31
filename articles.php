@@ -51,7 +51,7 @@ function primed_articles() {
 
 <p>The meaningful questions to ask any supplier are: what purity standard is claimed, how is it measured, and can you see the evidence for the specific batch you received? A supplier who can answer all three with a batch-specific Certificate of Analysis is telling you something concrete. One who cannot is asking you to take their word for it.</p>
 
-<p>At Primed Peptides, every batch is tested by an independent third-party laboratory for purity and identity before release. You can <a href="/coa/">request the Certificate of Analysis for your batch</a> at any time.</p>
+<p>At Primed Peptides, every batch carries a Certificate of Analysis recording purity and identity before release, and independent third-party verification through Janoshik Analytical can be arranged on request. You can <a href="/coa/">request the Certificate of Analysis for your batch</a> at any time.</p>
 
 <h2>Research use only</h2>
 
@@ -114,7 +114,7 @@ HTML,
 
 <p>There's a meaningful difference between a manufacturer testing its own output and an independent third-party laboratory doing so. Both can be honest, but only one removes the conflict of interest entirely. It's a fair question to ask any supplier.</p>
 
-<p>Every batch of Primed Peptides material is tested by an independent third-party laboratory for purity and identity before release. To request the COA for your batch, email <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> with your product name and batch number, or see the <a href="/coa/">Certificate of Analysis page</a>.</p>
+<p>Every batch of Primed Peptides material carries a Certificate of Analysis recording purity and identity before release, and independent third-party verification through Janoshik Analytical is available on request. To request the COA for your batch, email <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a> with your product name and batch number, or see the <a href="/coa/">Certificate of Analysis page</a>.</p>
 HTML,
         ],
 
@@ -143,7 +143,7 @@ HTML,
 
 <p>A purity figure is only as good as three things: the method it was measured by, whether the testing was independent, and whether it applies to your specific batch rather than to a representative sample from some earlier production run. A supplier who publishes all three is giving you something checkable.</p>
 
-<p>Primed Peptides material is tested to a minimum 99% purity standard by an independent third-party laboratory, per batch, with identity confirmed alongside it. See <a href="/articles/understanding-certificate-of-analysis/">how to read a Certificate of Analysis</a> for what to look for in the documentation itself.</p>
+<p>Primed Peptides material is produced to a minimum 99% purity standard, documented per batch on its Certificate of Analysis with identity confirmed alongside it. Independent third-party verification through Janoshik Analytical is available on request. See <a href="/articles/understanding-certificate-of-analysis/">how to read a Certificate of Analysis</a> for what to look for in the documentation itself.</p>
 HTML,
         ],
     ];
