@@ -55,7 +55,22 @@ def log(msg):
         f.write(line + "\n")
 
 BOT_SEND_URL = "http://localhost:3001/api/internal/send"
-BOT_SECRET = "hs-int-2026"
+# Shared internal-API secret. Value lives in C:\Services\personal\internal-api.json, which is
+# NOT git-tracked - it used to be hardcoded here and in five other files across five services
+# (2026-09-04). Same value as before; the point is that it is no longer in source control.
+def _internal_secret():
+    import json
+    try:
+        with open(r"C:\Services\personal\internal-api.json", "r", encoding="utf-8") as f:
+            return json.load(f)["secret"]
+    except Exception as e:
+        # No literal fallback on purpose - see the JS note. Fail loudly rather than shipping the
+        # old secret in source control.
+        print(r"[internal-secret] cannot read C:\Services\personal\internal-api.json: %s" % e)
+        return None
+
+
+BOT_SECRET = _internal_secret()
 ALERT_TO = "447545451386"  # Rupert - same number health-monitor.js alerts
 
 # wc_id -> short label for the alert message (the 8 confidently-mapped live products)
