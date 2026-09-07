@@ -172,14 +172,17 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 28);
 
-// Stale as of 2026-08-29: bank transfer (bacs) was disabled the same day PayPal
-// Payments went live (see corrections/master_todo) - this notice was still telling
-// every visitor to expect a bank-transfer checkout, which hasn't been true for a
-// live, real order since. Found while working on an unrelated page, fixed same day.
+// Payment notice. This line has now been wrong twice in opposite directions, so it
+// is worth stating the rule: it must always describe the gateway that is actually
+// enabled, and it has to be changed in the same edit as the gateway itself.
+//   - until 2026-08-29 it said "bank transfer" after PayPal went live
+//   - from 2026-08-29 it said "PayPal" - and on 2026-09-03 PayPal restricted the
+//     account for the product category, so that became wrong the same way round.
+// Back to bank transfer, which is what the checkout offers again as of 2026-09-07.
 add_action('woocommerce_single_product_summary', function() {
     echo '<div class="product-delivery-notice" style="margin-top:8px;">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2m9-8a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Pay securely by PayPal or Credit/Debit Card at checkout — no account required.
+        Pay by bank transfer at checkout — details are sent with your order confirmation.
     </div>';
 }, 29);
 
@@ -398,6 +401,24 @@ add_action('woocommerce_after_single_product_summary', function() {
     </div>
     <?php
 }, 25);
+
+// ── Hard-off switch for the PayPal gateways (2026-09-07) ──
+// This site takes bank transfer only; neither PayPal gateway should appear at checkout.
+//
+// Turning them off in WooCommerce is NOT enough on its own. 'wpg_paypal_checkout'
+// took the change, but its sibling 'wpg_paypal_checkout_cc' does not persist
+// 'enabled' through the REST settings API at all: three PUTs each came back
+// reporting enabled=false, and a re-read each time still showed it live. It is a
+// third-party plugin ("PayPal Gateway By Easy Payment"), not the official one, and
+// it evidently keeps that flag somewhere the standard API does not write.
+//
+// So the gateways are removed from the available list here instead, where the theme
+// has the final say regardless of what the plugin's own options contain. Delete this
+// block to bring PayPal back - do not rely on the plugin's own toggle to hold.
+add_filter('woocommerce_available_payment_gateways', function($gateways) {
+    unset($gateways['wpg_paypal_checkout'], $gateways['wpg_paypal_checkout_cc']);
+    return $gateways;
+}, 99);
 
 // ── Partner & Affiliate Referral System ──
 // Partners: customer pays into partner's bank directly
