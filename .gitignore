@@ -19,3 +19,6 @@ real-box-photos/
 # All automation Chrome profiles - these hold live session cookies and logins.
 # This repo is PUBLIC; committing one would leak authenticated sessions.
 .chrome-*/
+
+# Amazon listing data - third-party product photos, not ours to publish
+amazon_accessory_options.json
