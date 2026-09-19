@@ -98,8 +98,26 @@
             ];
             $products = new WP_Query($args);
 
-            if ($products->have_posts()):
-                while ($products->have_posts()): $products->the_post();
+            // Accessories go LAST, whatever menu_order says. They are consumables - swabs,
+            // syringes, a sharps bin, bac water - and on menu_order alone five of them sat
+            // above every peptide on the page, so the first thing a visitor saw was a box
+            // of alcohol swabs. Sorting here rather than by re-numbering menu_order in Woo
+            // keeps it true even after someone adds a product through the admin.
+            $main_posts = [];
+            $acc_posts  = [];
+            foreach ($products->posts as $p) {
+                $p_cats = wp_get_post_terms($p->ID, 'product_cat', ['fields' => 'names']);
+                $p_slug = !empty($p_cats) ? sanitize_title($p_cats[0]) : '';
+                if ($p_slug === 'accessories') {
+                    $acc_posts[] = $p;
+                } else {
+                    $main_posts[] = $p;
+                }
+            }
+
+            global $post;
+            foreach (array_merge($main_posts, $acc_posts) as $post):
+                setup_postdata($post);
                     $product = wc_get_product(get_the_ID());
                     if (!$product) continue;
                     $cats = wp_get_post_terms(get_the_ID(), 'product_cat', ['fields' => 'names']);
@@ -113,14 +131,29 @@
                     <?php if ($image_id): ?>
                         <?php echo wp_get_attachment_image($image_id, 'medium'); ?>
                     <?php else:
+                        // The five consumable accessories carry NO SKU, so they have to be
+                        // matched on name. Each specific test must come before the generic
+                        // ones below it: every one of these used to fall through to
+                        // product-cartridge.svg, so a sharps bin, a box of swabs and a pack
+                        // of syringes all showed a drawing of a peptide cartridge.
                         $sku = $product ? $product->get_sku() : '';
                         $name = strtolower(get_the_title());
-                        if (strpos($sku, 'ACC-002') !== false || strpos($name, 'case') !== false) {
+                        if (strpos($name, 'sharps') !== false) {
+                            $img = 'product-sharps-bin.svg';
+                        } elseif (strpos($name, 'swab') !== false) {
+                            $img = 'product-swabs.svg';
+                        } elseif (strpos($name, 'syringe') !== false) {
+                            $img = 'product-syringe.svg';
+                        } elseif (strpos($name, 'bacteriostatic') !== false) {
+                            $img = 'product-bac-water.svg';
+                        } elseif (strpos($name, 'vial') !== false) {
+                            // "Sterile Glass Vials 10ml - Pack of 10" is a PACK. The single
+                            // vial drawing made it indistinguishable from the bac water card.
+                            $img = (strpos($name, 'pack') !== false) ? 'product-vials-pack.svg' : 'product-vial.svg';
+                        } elseif (strpos($sku, 'ACC-002') !== false || strpos($name, 'case') !== false) {
                             $img = 'product-case.svg';
                         } elseif (strpos($sku, 'ACC-001') !== false || strpos($name, 'metal pen') !== false || strpos($name, 'reusable') !== false) {
                             $img = 'product-pen.svg';
-                        } elseif (strpos($name, 'vial') !== false) {
-                            $img = 'product-vial.svg';
                         } else {
                             $img = 'product-cartridge.svg';
                         }
@@ -146,9 +179,8 @@
                 </div>
             </div>
             <?php
-                endwhile;
-                wp_reset_postdata();
-            endif;
+            endforeach;
+            wp_reset_postdata();
             ?>
         </div>
     </div>

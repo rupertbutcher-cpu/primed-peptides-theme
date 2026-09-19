@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- 1ml syringe, drawn on the diagonal so the full length fits the square without
+       shrinking the barrel to an unreadable sliver. -->
+  <g transform="rotate(-32 150 150)">
+
+    <!-- Needle -->
+    <line x1="42" y1="150" x2="84" y2="150" stroke="#b9cdd9" stroke-width="3" stroke-linecap="round"/>
+    <!-- Needle hub -->
+    <path d="M84 141 h16 v18 h-16 z" fill="#8ecae6"/>
+    <path d="M100 138 h10 v24 h-10 z" fill="#6bb5e3"/>
+
+    <!-- Barrel -->
+    <rect x="110" y="132" width="122" height="36" rx="7" fill="white" stroke="#c8e0f0" stroke-width="2"/>
+    <!-- Liquid -->
+    <rect x="112" y="134" width="64" height="32" rx="5" fill="#e8f4fb"/>
+
+    <!-- Graduations -->
+    <line x1="126" y1="134" x2="126" y2="146" stroke="#c8e0f0" stroke-width="1.5"/>
+    <line x1="146" y1="134" x2="146" y2="150" stroke="#9fc8e0" stroke-width="1.5"/>
+    <line x1="166" y1="134" x2="166" y2="146" stroke="#c8e0f0" stroke-width="1.5"/>
+    <line x1="186" y1="134" x2="186" y2="150" stroke="#9fc8e0" stroke-width="1.5"/>
+    <line x1="206" y1="134" x2="206" y2="146" stroke="#c8e0f0" stroke-width="1.5"/>
+
+    <!-- Plunger seal + rod -->
+    <rect x="174" y="132" width="10" height="36" rx="3" fill="#6bb5e3"/>
+    <rect x="232" y="144" width="30" height="12" rx="3" fill="#8ecae6"/>
+    <rect x="258" y="130" width="10" height="40" rx="4" fill="#6bb5e3"/>
+
+    <!-- Barrel shine -->
+    <rect x="114" y="136" width="114" height="6" rx="3" fill="white" opacity="0.6"/>
+  </g>
+
+  <!-- Caption -->
+  <text x="150" y="246" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#6bb5e3" letter-spacing="1">1ml &#183; STERILE</text>
+  <text x="150" y="261" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#94b8cc" letter-spacing="2">PEPTIDES</text>
+</svg>

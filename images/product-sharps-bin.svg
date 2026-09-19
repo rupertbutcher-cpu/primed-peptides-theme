@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <rect width="300" height="300" fill="#f0f7fd"/>
+
+  <!-- Sharps bins are yellow everywhere in the UK. The blue house palette is kept for the
+       ground, lid trim and type, but the body stays amber: a blue sharps bin does not read
+       as a sharps bin. -->
+
+  <!-- Bin body -->
+  <path d="M96 108 h108 l-8 112 a10 10 0 0 1 -10 9 h-72 a10 10 0 0 1 -10 -9 z" fill="#f5b83d" stroke="#e0a02b" stroke-width="2"/>
+
+  <!-- Body shine -->
+  <path d="M104 112 h12 l-7 108 h-12 z" fill="white" opacity="0.35"/>
+
+  <!-- Lid -->
+  <rect x="88" y="86" width="124" height="26" rx="7" fill="#ffd166" stroke="#e0a02b" stroke-width="2"/>
+  <rect x="88" y="86" width="124" height="10" rx="5" fill="#ffdd8f"/>
+
+  <!-- Aperture -->
+  <rect x="126" y="93" width="48" height="12" rx="6" fill="#c98c1e"/>
+  <rect x="131" y="96" width="38" height="6" rx="3" fill="#a9721a"/>
+
+  <!-- Hazard band -->
+  <rect x="92" y="132" width="112" height="22" fill="#e0a02b" opacity="0.35"/>
+  <path d="M100 132 l14 22 h-10 l-14 -22 z" fill="#c98c1e" opacity="0.5"/>
+  <path d="M124 132 l14 22 h-10 l-14 -22 z" fill="#c98c1e" opacity="0.5"/>
+  <path d="M148 132 l14 22 h-10 l-14 -22 z" fill="#c98c1e" opacity="0.5"/>
+  <path d="M172 132 l14 22 h-10 l-14 -22 z" fill="#c98c1e" opacity="0.5"/>
+  <path d="M196 132 l10 16 v-16 z" fill="#c98c1e" opacity="0.5"/>
+
+  <!-- Label -->
+  <rect x="100" y="164" width="96" height="48" rx="6" fill="white" stroke="#e8d3a4" stroke-width="1"/>
+  <text x="148" y="182" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#b8860b" letter-spacing="1.5">SHARPS</text>
+  <rect x="112" y="189" width="72" height="3" rx="1.5" fill="#f0e2c4"/>
+  <text x="148" y="203" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#94b8cc" letter-spacing="2">PEPTIDES</text>
+
+  <!-- Fill line -->
+  <line x1="99" y1="222" x2="193" y2="222" stroke="#e0a02b" stroke-width="1.5" stroke-dasharray="5 4"/>
+</svg>
