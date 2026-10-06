@@ -37,6 +37,12 @@
         <strong>Research Use Only:</strong> All products sold by Primed Peptides are intended for research and laboratory use only. They are not intended for human consumption, veterinary use, or any other purpose. By purchasing, you confirm you are a qualified researcher and agree to our terms of use.
     </div>
 
+    <?php /* Companies Act: a Ltd's website must show its name, number, place of registration and registered office (6 Oct 2026). */ ?>
+    <div class="container company-details" style="margin-top:14px;font-size:11.5px;color:#8b93a3;line-height:1.6;">
+        Primed Peptides is a trading name of Premium Wellness Ltd, a company registered in England and Wales, company number 17480782.
+        Registered office: 71-75 Shelton Street, Covent Garden, London WC2H 9JQ.
+    </div>
+
     <div class="footer-bottom">
         <span>&copy; <?php echo date('Y'); ?> Primed Peptides. All rights reserved.</span>
         <span>Designed &amp; built in the UK</span>
