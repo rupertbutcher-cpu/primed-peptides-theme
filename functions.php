@@ -444,13 +444,28 @@ function primed_referral_config() {
         ],
         // Affiliates — no bank swap, order gets tagged for commission
         // 'kat' => ['name' => 'Kat', 'type' => 'affiliate', 'bank' => null],
+        // Paul + Gaia added 9 Oct 2026 (Rupert). Commission % to be agreed - Rupert is setting it up separately;
+        // 'commission' is a note for whoever pays it out, nothing reads it yet.
+        'paul' => [
+            'name' => 'Paul',
+            'type' => 'affiliate',
+            'bank' => null,
+            'commission' => null,
+        ],
+        'gaia' => [
+            'name' => 'Gaia',
+            'type' => 'affiliate',
+            'bank' => null,
+            'commission' => null,
+        ],
     ];
 }
 
 // Store referral in cookie for 30 days when visitor arrives via ?ref=name
 add_action('init', function() {
     if (!empty($_GET['ref'])) {
-        $ref = sanitize_text_field($_GET['ref']);
+        // Lower-cased so ?ref=Paul (as people type it) works the same as ?ref=paul
+        $ref = strtolower(sanitize_text_field($_GET['ref']));
         $config = primed_referral_config();
         if (isset($config[$ref])) {
             setcookie('primed_ref', $ref, time() + 30 * DAY_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
