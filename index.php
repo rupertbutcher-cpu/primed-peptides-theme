@@ -60,6 +60,9 @@
     </div>
 </div>
 
+<?php /* Google reviews near the top (Rupert 26 Oct: "can we put it near the top instead of the bottom"). */ ?>
+<?php if ((is_front_page() || is_home()) && function_exists('primed_reviews_section')) primed_reviews_section(); ?>
+
 <!-- Products -->
 <section class="products-section">
     <div class="container">
@@ -193,7 +196,5 @@
         <p>All Primed Peptides products are third-party tested and come with certificates of analysis. UK made to the highest research standards.</p>
     </div>
 </div>
-
-<?php if ((is_front_page() || is_home()) && function_exists('primed_reviews_section')) primed_reviews_section(); ?>
 
 <?php get_footer(); ?>
