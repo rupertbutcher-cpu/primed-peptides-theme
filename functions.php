@@ -200,13 +200,15 @@ add_action('woocommerce_single_product_summary', function() {
 // shortcode. Homepage (index.php, under the purity banner) + product pages (under the tabs).
 // PRIMED_REVIEWS_PUBLIC false = only a logged-in admin sees the section, so Rupert can check it on the real site
 // first; set it to true to show everyone. If the plugin is off, nothing prints (never the raw shortcode).
-define('PRIMED_REVIEWS_PUBLIC', false);
+define('PRIMED_REVIEWS_PUBLIC', true);   // public 26 Oct 2026 (Rupert: "lets go with that for now")
 function primed_reviews_section() {
     if (!shortcode_exists('trustindex')) return;
     if (!PRIMED_REVIEWS_PUBLIC && !current_user_can('manage_options')) return;
     $widget = do_shortcode('[trustindex no-registration=google]');
     if (trim($widget) === '') return;
-    echo '<section class="primed-reviews" style="padding:56px 0;">
+    // grid-column/min-width/overflow (26 Oct): on product pages this sits inside the product's own layout, and the
+    // slider stretched it - the page went 1,224px wide on a 400px phone the moment it went public.
+    echo '<section class="primed-reviews" style="padding:56px 0;grid-column:1 / -1;width:100%;min-width:0;max-width:100%;overflow:hidden;clear:both;">
         <div class="container">
             <h2 style="text-align:center;margin:0 0 24px;">What our customers say</h2>
             ' . $widget . '
