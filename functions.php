@@ -1038,11 +1038,11 @@ function primed_newsletter_signup() {
 add_action('wp_footer', function() {
     ?>
     <div id="primed-signup-bar" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#14181f;color:#fff;padding:14px 44px 14px 20px;font-family:inherit;font-size:14px;box-shadow:0 -2px 12px rgba(0,0,0,.2);">
-      <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">
-        <span style="white-space:nowrap;">Get <strong>10% off</strong> your first order — join our list</span>
+      <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;">
+        <span class="primed-signup-line">Get <strong>10% off</strong> your first order — join our list</span>
         <form id="primed-signup-form" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <input type="email" name="email" required placeholder="you@example.com"
-                 style="padding:9px 12px;border-radius:5px;border:1px solid #333;min-width:220px;font-size:14px;">
+                 style="padding:9px 12px;border-radius:5px;border:1px solid #333;min-width:0;flex:1 1 180px;font-size:14px;">
           <button type="submit"
                   style="background:#76b3f8;color:#0d1117;border:none;padding:9px 18px;border-radius:5px;cursor:pointer;font-weight:600;font-size:14px;">
             Get 10% off
@@ -1057,6 +1057,13 @@ add_action('wp_footer', function() {
     <style>
       @media (max-width: 640px) {
         #primed-signup-bar .primed-row { flex-direction: column; }
+      }
+      /* 26 Oct 2026 (as Premium's): on a phone the no-wrap line and the 220px-minimum email box ran off the left
+         of the screen - the line now wraps, the box shrinks, and the bar is tighter. */
+      @media (max-width: 600px) {
+        #primed-signup-bar { padding: 10px 40px 10px 14px !important; font-size: 13px !important; }
+        #primed-signup-bar .primed-signup-line { width: 100%; text-align: center; }
+        #primed-signup-form { width: 100%; flex-wrap: nowrap !important; }
       }
     </style>
     <script>
