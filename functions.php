@@ -186,6 +186,15 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 29);
 
+// Reviews (26 Oct 2026, Danny: "there are no reviews on the website" / "put the review links ... back on there").
+// Primed's OWN Trustpilot page only - never Premium's: the two sites stay completely separate. Footer has the same link.
+add_action('woocommerce_single_product_summary', function() {
+    echo '<div class="product-delivery-notice" style="margin-top:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.4 7 .7-5.3 4.7 1.5 6.9L12 17.6l-6.1 3.6 1.5-6.9-5.3-4.7 7-.7z"/></svg>
+        <a href="https://www.trustpilot.com/review/primedpeptides.co.uk" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Read our customer reviews on Trustpilot</a>
+    </div>';
+}, 30);
+
 // ── Private payment-test product (id 127) ──
 // Rupert 2026-08-30: wants the £1 test product reachable by direct link only -
 // not through the menu, shop, or search - so real checkouts can be tested

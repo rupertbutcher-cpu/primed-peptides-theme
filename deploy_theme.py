@@ -4,6 +4,10 @@ Deploy changed theme files over FTP to either peptide site.
   python deploy_theme.py primed  functions.php faq.php articles.php
   python deploy_theme.py premium functions.php articles.php index.php
   python deploy_theme.py primed  --all      (every .php + style.css in the repo root)
+  python deploy_theme.py primed  --check footer.php functions.php
+        UPLOADS NOTHING: downloads the live copy of each file and says SAME / DIFFERENT from the local one (line
+        endings ignored), saving the live copies under %TEMP%\\live-theme-<site>. Run it before editing: the local
+        functions.php has been stale against the live site before (Aug 2026) and an upload would have reverted it.
 
 Uploads to a .tmp name first and renames into place, so a dropped connection
 can never leave a half-written functions.php live on the site - which would
@@ -71,6 +75,8 @@ def main():
     env = load_env(cfg['env'])
 
     files = sys.argv[2:]
+    check = '--check' in files
+    files = [f for f in files if f != '--check']
     if files == ['--all']:
         files = sorted(f for f in os.listdir(cfg['local'])
                        if f.endswith('.php') or f == 'style.css')
@@ -86,6 +92,29 @@ def main():
         ftp.quit()
         return 1
     print(f'  theme dir: {remote}\n')
+
+    if check:
+        import io
+        out_dir = os.path.join(os.environ.get('TEMP', '.'), f'live-theme-{site}')
+        os.makedirs(out_dir, exist_ok=True)
+        norm = lambda b: b.replace(b'\r\n', b'\n')
+        for f in files:
+            buf = io.BytesIO()
+            try:
+                ftp.retrbinary(f'RETR {f}', buf.write)
+            except ftplib.all_errors as e:
+                print(f'  cannot read live {f}: {e}')
+                continue
+            live = buf.getvalue()
+            local = os.path.join(cfg['local'], f)
+            loc = open(local, 'rb').read() if os.path.exists(local) else None
+            with open(os.path.join(out_dir, f), 'wb') as fh:
+                fh.write(live)
+            same = loc is not None and norm(live) == norm(loc)
+            print(f'  {"SAME     " if same else "DIFFERENT"} {f:<22} live {len(live):>7,} bytes, local {len(loc or b""):>7,} bytes')
+        print(f'\nlive copies saved in {out_dir} - nothing uploaded')
+        ftp.quit()
+        return 0
 
     sent = failed = 0
     for f in files:
