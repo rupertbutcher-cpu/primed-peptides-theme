@@ -195,6 +195,27 @@ add_action('woocommerce_single_product_summary', function() {
     </div>';
 }, 30);
 
+// Google reviews (26 Oct 2026, Rupert: "we have lots of google reviews can we show those?"). The free Trustindex
+// "Widgets for Google Reviews" plugin, connected to Primed's own Google profile by Rupert, renders them from its
+// shortcode. Homepage (index.php, under the purity banner) + product pages (under the tabs).
+// PRIMED_REVIEWS_PUBLIC false = only a logged-in admin sees the section, so Rupert can check it on the real site
+// first; set it to true to show everyone. If the plugin is off, nothing prints (never the raw shortcode).
+define('PRIMED_REVIEWS_PUBLIC', false);
+function primed_reviews_section() {
+    if (!shortcode_exists('trustindex')) return;
+    if (!PRIMED_REVIEWS_PUBLIC && !current_user_can('manage_options')) return;
+    $widget = do_shortcode('[trustindex no-registration=google]');
+    if (trim($widget) === '') return;
+    echo '<section class="primed-reviews" style="padding:56px 0;">
+        <div class="container">
+            <h2 style="text-align:center;margin:0 0 24px;">What our customers say</h2>
+            ' . $widget . '
+            <p style="text-align:center;margin:20px 0 0;font-size:0.95em;"><a href="https://www.trustpilot.com/review/primedpeptides.co.uk" target="_blank" rel="noopener">More reviews on Trustpilot</a></p>
+        </div>
+    </section>';
+}
+add_action('woocommerce_after_single_product_summary', 'primed_reviews_section', 12);
+
 // ── Private payment-test product (id 127) ──
 // Rupert 2026-08-30: wants the £1 test product reachable by direct link only -
 // not through the menu, shop, or search - so real checkouts can be tested

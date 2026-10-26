@@ -194,4 +194,6 @@
     </div>
 </div>
 
+<?php if ((is_front_page() || is_home()) && function_exists('primed_reviews_section')) primed_reviews_section(); ?>
+
 <?php get_footer(); ?>
