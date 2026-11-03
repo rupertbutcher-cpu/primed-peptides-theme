@@ -69,7 +69,7 @@ function primed_faq_sections() {
             ],
             [
                 'How should I store it?',
-                'Cool, dry, away from direct sunlight, and follow the specific instructions on your product\'s packaging. There\'s more detail on what actually degrades peptides in <a href="/articles/how-to-store-research-peptides/">this article</a>.',
+                'In the fridge, between 2 and 8&deg;C, away from direct sunlight, and follow the specific instructions on your product\'s packaging. There\'s more detail on what actually degrades peptides in <a href="/articles/how-to-store-research-peptides/">this article</a>.',
             ],
         ],
 

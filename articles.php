@@ -79,7 +79,7 @@ HTML,
 
 <h2>Practical handling</h2>
 
-<p>Keep material in a cool, dry place away from direct sunlight, and follow the specific storage conditions printed on your product's packaging &mdash; these vary by format, and the label is the authority for the product in your hand.</p>
+<p>Keep cartridges in the fridge, between 2 and 8&deg;C, away from direct sunlight, and follow the specific storage conditions printed on your product's packaging &mdash; these vary by format, and the label is the authority for the product in your hand.</p>
 
 <p>If a container has been refrigerated, allowing it to reach room temperature before opening reduces the chance of condensation forming inside it. Minimising the number of times a container is opened, and the length of time it sits open, limits both moisture ingress and light exposure.</p>
 

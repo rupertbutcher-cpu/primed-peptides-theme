@@ -405,7 +405,7 @@ add_action('woocommerce_after_single_product_summary', function() {
         <ol>
             <li>Check your Certificate of Analysis — scan the QR code on your product, or visit <a href="/coa/">primedpeptides.co.uk/coa</a>.</li>
             <li>This product ships as a stabilised cartridge, compatible with the Primed Peptides reusable pen (sold separately).</li>
-            <li>Store in a cool, dry place away from direct sunlight.</li>
+            <li>Store in the fridge, between 2 and 8&deg;C, away from direct sunlight.</li>
             <li>Questions? Email <a href="mailto:info@primedpeptides.co.uk">info@primedpeptides.co.uk</a>.</li>
         </ol>
 
