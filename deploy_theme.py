@@ -123,6 +123,14 @@ def main():
             print(f'  SKIP (missing locally) {f}')
             continue
         size = os.path.getsize(local)
+        # A file in a subfolder (assets/js/main.js): make the folders first. 7 Nov 2026 - the live theme had no
+        # assets/js at all, so the homepage category tabs never worked (main.js 404).
+        parts = f.replace('\\', '/').split('/')[:-1]
+        for i in range(1, len(parts) + 1):
+            try:
+                ftp.mkd('/'.join(parts[:i]))
+            except ftplib.all_errors:
+                pass
         tmp = f + '.uploading'
         try:
             with open(local, 'rb') as fh:
